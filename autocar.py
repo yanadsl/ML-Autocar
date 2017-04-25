@@ -2,7 +2,7 @@ import time
 from RpiEnv import Env
 import numpy as np
 from qLearning import QL
-
+from colorama import Fore, Back, Style
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
@@ -12,7 +12,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
     np.random.seed(1337)
 
-    episode_count = 2000
+    episode_count = 200
     max_steps = 1000
 
     # Generate a Torcs environment
@@ -32,6 +32,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             total_reward = 0
             for j in range(max_steps):
                 time_record = int(time.time() * 1000)
+
                 action = Qlearning.action_choose(state)
                 env.step(action)
                 time.sleep(0.5)
@@ -43,23 +44,25 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 total_reward += reward
 
-                print("Episode", i, "Step", step, "State", state, "Action", action, "Reward", reward)
+                print(Back.GREEN, "Ep", i, "Step", step, "State", state, "Action", action,
+                      "resp_t:", (int(time.time() * 1000) - time_record), Style.RESET_ALL)
+
                 if dead:
-                    env.stop_servo()
+                    env.set_speed(0, 0)
                     break
 
                 state = new_state
                 step += 1
-                print("respond time", (int(time.time() * 1000) - time_record))
 
             if train_indicator:
-                print("Now we save model")
+                print(Back.GREEN, "Now we save model", Style.RESET_ALL)
                 Qlearning.save("Qtable.h5")
 
             print("")
             input("Ready for next? Press return")
         env.end()  # Stop Servos
         print("Finish.")
+
     except KeyboardInterrupt:
         ask = input("save model?(y/n):")
         if ask == 'y':

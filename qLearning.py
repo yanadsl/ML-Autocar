@@ -26,7 +26,7 @@ class QL:
         self.ob_exist(ob)
         if np.random.uniform() > self.greedy:
             action = self.table.ix[ob, :]
-            print(action)
+            print('[' + action.to_string().replace('\n', '][') + ']')
             action = action.reindex(np.random.permutation(action.index))
             action = action.argmax()
         else:

@@ -1,14 +1,10 @@
-import numpy as np
-import copy
-import collections as col
-import os
 import time
 import pigpio
 
 
 class Env:
-    left_servo_pin = 5
-    right_servo_pin = 6
+    left_servo_pin = 13
+    right_servo_pin = 12
     sensor_signal_pin = 4
     sensor_message_size = 3
     dead_pin = 17
@@ -23,14 +19,11 @@ class Env:
 
     def step(self, action):
         if action == 'left':
-            self.pi.set_servo_pulsewidth(self.left_servo_pin, 1500)
-            self.pi.set_servo_pulsewidth(self.right_servo_pin, 1500)
+            self.set_speed()
         elif action == 'go':
-            self.pi.set_servo_pulsewidth(self.left_servo_pin, 1500)
-            self.pi.set_servo_pulsewidth(self.right_servo_pin, 1500)
+            self.set_speed()
         else:
-            self.pi.set_servo_pulsewidth(self.left_servo_pin, 1500)
-            self.pi.set_servo_pulsewidth(self.right_servo_pin, 1500)
+            self.set_speed()
 
     def get_respond(self):
         while (int(time.time() * 1000) - self.time_record) >= self.time_limit:
@@ -51,7 +44,7 @@ class Env:
         return distance
 
     def get_reward(self):
-        if self.pi.read(self.dead_pin):
+        if not self.pi.read(self.dead_pin):
             reward = -1000
             dead = True
         else:
@@ -82,10 +75,10 @@ class Env:
                 dis += '0'
         return dis
 
-    def stop_servo(self):
-        self.pi.set_servo_pulsewidth(self.left_servo_pin, 0)
-        self.pi.set_servo_pulsewidth(self.right_servo_pin, 0)
+    def set_speed(self, lspeed=0, rspeed=0):
+        self.pi.hardware_PWM(self.left_servo_pin, 800, int(lspeed) * 10000)
+        self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
 
     def end(self):
-        self.stop_servo()
+        self.set_speed(0, 0)
         self.pi.serial_close(self.h1)
