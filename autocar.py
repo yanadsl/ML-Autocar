@@ -57,7 +57,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 Qlearning.save("Qtable.h5")
 
             print("")
-            input("Ready for next? Press return")
+            raw_input("Ready for next? Press return")
         env.end()  # Stop Servos
         print("Finish.")
 

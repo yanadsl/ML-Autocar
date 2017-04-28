@@ -19,11 +19,11 @@ class Env:
 
     def step(self, action):
         if action == 'left':
-            self.set_speed(10, 100)
+            self.set_speed(20, 100)
         elif action == 'go':
             self.set_speed(100, 100)
         else:
-            self.set_speed(100, 0)
+            self.set_speed(100, 20)
 
     def get_respond(self):
         # delay at least 50ms to get right value of sonic sensor
@@ -45,7 +45,8 @@ class Env:
         return distance
 
     def get_reward(self):
-        if not self.pi.read(self.dead_pin):
+        # 0 means die
+        if self.pi.read(self.dead_pin) == pigpio.LOW:
             reward = -1000
             dead = True
         else:
