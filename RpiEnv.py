@@ -9,7 +9,7 @@ class Env:
     sensor_message_size = 3
     dead_pin = 17
     time_record = int(time.time() * 1000)
-    time_limit = 50
+    time_limit = 20
 
     def __init__(self, ):
         self.pi = pigpio.pi()
@@ -19,21 +19,22 @@ class Env:
 
     def step(self, action):
         if action == 'left':
-            self.set_speed()
+            self.set_speed(10, 100)
         elif action == 'go':
-            self.set_speed()
+            self.set_speed(100, 100)
         else:
-            self.set_speed()
+            self.set_speed(100, 0)
 
     def get_respond(self):
-        while (int(time.time() * 1000) - self.time_record) >= self.time_limit:
+        # delay at least 50ms to get right value of sonic sensor
+        while (int(time.time() * 1000) - self.time_record) <= self.time_limit:
             time.sleep(0.002)
         self.time_record = int(time.time() * 1000)
         distance = []
         self.pi.serial_read(self.h1)  # clear any redauntancy data
         self.pi.write(self.sensor_signal_pin, pigpio.HIGH)
-        while self.pi.serial_data_available(self.h1) < self.sensor_message_size:
-            time.sleep(0.0005)
+        while self.pi.serial_data_available(self.h1) < self.sensor_message_size-1:
+            time.sleep(0.0007)
         (b, d) = self.pi.serial_read(self.h1, self.sensor_message_size)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         for a in d:

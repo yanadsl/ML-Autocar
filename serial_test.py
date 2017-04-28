@@ -33,7 +33,7 @@ sensor_message_size = 2
 sensor_signal_pin = 4
 pi.set_mode(sensor_signal_pin, pigpio.OUTPUT)
 h1 = pi.serial_open("/dev/ttyAMA0", 9600)
-pi.write(sensor_signal_pin, 0)
+pi.write(sensor_signal_pin, pigpio.LOW)
 print("start")
 try:
     while True:
@@ -42,9 +42,9 @@ try:
         time_record = int(time.time() * 1000)
         distance = []
         pi.serial_read(h1)  # clear any redauntancy data
-        pi.write(sensor_signal_pin, 1)
+        pi.write(sensor_signal_pin, pigpio.HIGH)
         print("high")
-        while pi.serial_data_available(h1) < sensor_message_size:
+        while pi.serial_data_available(h1) < sensor_message_size-1:
             #print( pi.serial_data_available(h1))
             time.sleep(0.0007)
         (b, d) = pi.serial_read(h1,sensor_message_size)

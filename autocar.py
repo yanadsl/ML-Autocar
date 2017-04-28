@@ -2,7 +2,6 @@ import time
 from RpiEnv import Env
 import numpy as np
 from qLearning import QL
-from colorama import Fore, Back, Style
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
@@ -35,7 +34,6 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state)
                 env.step(action)
-                time.sleep(0.5)
 
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
@@ -44,8 +42,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 total_reward += reward
 
-                print(Back.GREEN, "Ep", i, "Step", step, "State", state, "Action", action,
-                      "resp_t:", (int(time.time() * 1000) - time_record), Style.RESET_ALL)
+                print( "Ep", i, "Step", step, "State", state, "Action", action,
+                      "resp_t:", (int(time.time() * 1000) - time_record))
 
                 if dead:
                     env.set_speed(0, 0)
@@ -55,7 +53,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 step += 1
 
             if train_indicator:
-                print(Back.GREEN, "Now we save model", Style.RESET_ALL)
+                print("Now we save model")
                 Qlearning.save("Qtable.h5")
 
             print("")
@@ -64,11 +62,11 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         print("Finish.")
 
     except KeyboardInterrupt:
-        ask = input("save model?(y/n):")
+        env.end()
+        ask = raw_input("save model?(y/n):")
         if ask == 'y':
             print("Now we save model")
             Qlearning.save("Qtable.h5")
-        env.end()
 
 
 if __name__ == "__main__":
