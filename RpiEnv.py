@@ -1,21 +1,22 @@
 import time
 import pigpio
+import math
 
 
 class Env:
     left_servo_pin = 13
     right_servo_pin = 12
     sensor_signal_pin = 4
-    sensor_message_size = 3
+    sensor_message_size = 7
     dead_pin = 17
     time_record = int(time.time() * 1000)
     time_limit = 20
 
-    def __init__(self, ):
+    def __init__(self, die_distance):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
-        self.initial_run = True
+        self.pi.serial_write_byte(self.h1, die_distance)
 
     def step(self, action):
         if action == 'left':
@@ -30,19 +31,15 @@ class Env:
         while (int(time.time() * 1000) - self.time_record) <= self.time_limit:
             time.sleep(0.002)
         self.time_record = int(time.time() * 1000)
-        distance = []
+
         self.pi.serial_read(self.h1)  # clear any redauntancy data
         self.pi.write(self.sensor_signal_pin, pigpio.HIGH)
-        while self.pi.serial_data_available(self.h1) < self.sensor_message_size-1:
+        while self.pi.serial_data_available(self.h1) < self.sensor_message_size - 1:
             time.sleep(0.0007)
         (b, d) = self.pi.serial_read(self.h1, self.sensor_message_size)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
-        for a in d:
-            distance.append(int(a) / 2.0)
 
-        distance = self.normalize(distance)
-
-        return distance
+        return self.process_data(d)
 
     def get_reward(self):
         # 0 means die
@@ -80,6 +77,18 @@ class Env:
     def set_speed(self, lspeed=0, rspeed=0):
         self.pi.hardware_PWM(self.left_servo_pin, 800, int(lspeed) * 10000)
         self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
+
+    def process_data(self, data):
+        sets = []
+        # transform byte array to int
+        for a in data:
+            sets.append(int(a) / 2.0)
+
+        return self.normalize(
+                [min(sets[0] * math.cos(math.pi / 6), sets[1]),
+                 min(sets[2] * math.cos(math.pi / 6), sets[3], sets[4] * math.cos(math.pi / 6)),
+                 min(sets[5], sets[6] * math.cos(math.pi / 6))]
+        )
 
     def end(self):
         self.set_speed(0, 0)

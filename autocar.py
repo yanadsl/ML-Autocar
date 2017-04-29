@@ -8,14 +8,14 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     learning_rate = 0.4
     greedy = 0.1
     decay = 0.9
-
+    die_distance = 10
     np.random.seed(1337)
 
     episode_count = 200
     max_steps = 1000
 
-    # Generate a Torcs environment
-    env = Env()
+    # initialize pigpiod and set at which distance is dead
+    env = Env(die_distance)
 
     Qlearning = QL(actions, decay, greedy, learning_rate)
 
@@ -42,7 +42,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 total_reward += reward
 
-                print( "Ep", i, "Step", step, "State", state, "Action", action,
+                print("Ep", i, "Step", step, "State", state, "Act", action,
                       "resp_t:", (int(time.time() * 1000) - time_record))
 
                 if dead:
