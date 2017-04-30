@@ -5,49 +5,13 @@ import time
 import math
 
 
-def normalize(dist):
-    dis = ''
-    if dist >= 81:
-        dis += '8'
-    elif dist >= 54:
-        dis += '7'
-    elif dist >= 45:
-        dis += '6'
-    elif dist >= 35:
-        dis += '5'
-    elif dist >= 27:
-        dis += '4'
-    elif dist >= 22.5:
-        dis += '3'
-    elif dist >= 18:
-        dis += '2'
-    elif dist >= 13.5:
-        dis += '1'
-    else:
-        dis += '0'
+def normalize_side(dist):
+    dis = str(math.floor(float(dist) / 2.5))
     return dis
 
 
-def normalize_side(dist):
-    dis = ''
-    if dist >= 45:
-        dis += '8'
-    elif dist >= 30:
-        dis += '7'
-    elif dist >= 25:
-        dis += '6'
-    elif dist >= 20:
-        dis += '5'
-    elif dist >= 15:
-        dis += '4'
-    elif dist >= 12.5:
-        dis += '3'
-    elif dist >= 10:
-        dis += '2'
-    elif dist >= 7.5:
-        dis += '1'
-    else:
-        dis += '0'
+def normalize(dist):
+    dis = str(math.floor(float(dist)/4.5))
     return dis
 
 
@@ -102,7 +66,7 @@ try:
         if distance[3] > 60:
             if fixed:
                 state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
-                        distance[3] + \
+                        normalize(distance[3]) + \
                         normalize_side(
                             round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
             else:
@@ -114,7 +78,7 @@ try:
         else:
             if fixed:
                 state = normalize_side(round(distance[1], 1)) + \
-                        distance[3] + \
+                        normalize(distance[3]) + \
                         normalize_side(round(distance[5], 1))
             else:
                 state = normalize_side(round(distance[1], 1)) + \

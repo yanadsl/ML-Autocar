@@ -9,8 +9,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     learning_rate = 0.3
     greedy = 0.005
     decay = 0.7
-    straight_die_distance = 10
-    side_die_distance = 7
+
     average_step_length = 5
     np.random.seed(1337)
 
@@ -20,7 +19,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     step_average = 0
     step_queue = []
     # initialize pigpiod and set at which distance is dead
-    env = Env(straight_die_distance, side_die_distance)
+    env = Env()
 
     Qlearning = QL(actions, decay, greedy, learning_rate)
 

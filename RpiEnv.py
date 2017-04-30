@@ -24,7 +24,7 @@ class Env:
     time_limit = 20
     sensor_unusable_diff = 6
 
-    def __init__(self, straight_die_distance, side_die_distance):
+    def __init__(self):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
