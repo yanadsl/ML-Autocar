@@ -8,21 +8,21 @@ import math
 def normalize(things):
     dis = ''
     for distance in things:
-        if distance >= 36:
+        if distance >= 108:
             dis += '8'
-        elif distance >= 24:
+        elif distance >= 72:
             dis += '7'
-        elif distance >= 20:
+        elif distance >= 60:
             dis += '6'
-        elif distance >= 16:
+        elif distance >= 48:
             dis += '5'
-        elif distance >= 12:
+        elif distance >= 36:
             dis += '4'
-        elif distance >= 10:
+        elif distance >= 30:
             dis += '3'
-        elif distance >= 8:
+        elif distance >= 24:
             dis += '2'
-        elif distance >= 6:
+        elif distance >= 18:
             dis += '1'
         else:
             dis += '0'
