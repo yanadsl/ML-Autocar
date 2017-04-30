@@ -85,7 +85,7 @@ try:
 
         if (abs(distance[2] - distance[1]) < sensor_unusable_diff and distance[2] < 40) or (
                         abs(distance[4] - distance[5]) < sensor_unusable_diff and distance[4] < 40):
-            print("修正啦FIXED")
+
             if distance[2] < 40:
                 a = distance[1] + 0.5
                 b = distance[2]
@@ -95,7 +95,8 @@ try:
             c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
-            distance[3] = round(ans, 1)
+            print("修正啦FIXED:", round(ans, 1))
+            # distance[3] = round(ans, 1)
         if distance[3] > 60:
             state = [normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
                      normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
