@@ -16,12 +16,12 @@ pi.serial_write_byte(h1, 10 * 2)
 pi.write(sensor_signal_pin, pigpio.LOW)
 print("start")
 sita = 1
+sets = []
 try:
     while True:
         while (int(time.time() * 1000) - time_record) <= time_limit:
             time.sleep(0.002)
         time_record = int(time.time() * 1000)
-        distance = []
         pi.serial_read(h1)  # clear any redauntancy data
         pi.write(sensor_signal_pin, pigpio.HIGH)
         while pi.serial_data_available(h1) < sensor_message_size - 1:
@@ -29,14 +29,14 @@ try:
             time.sleep(0.0007)
         (b, d) = pi.serial_read(h1, sensor_message_size)
         pi.write(sensor_signal_pin, pigpio.LOW)
-        sets = []
+        sets.clear()
         for a in d:
             sets.append(int(a) / 2.0)
         if pi.read(dead_pin) == pigpio.LOW:
             print("dead")
 
         if (abs(sets[2] - sets[1]) < 7 and sets[2] < 40) or (abs(sets[4] - sets[5]) < 7 and set[4] < 40):
-            print("修正FIXED")
+            print("FIXED")
             if sets[2] < 40:
                 a = sets[1]+0.5
                 b = sets[2]
