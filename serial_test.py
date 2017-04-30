@@ -7,21 +7,21 @@ import math
 
 def normalize(dist):
     dis = ''
-    if dist >= 108:
+    if dist >= 81:
         dis += '8'
-    elif dist >= 72:
+    elif dist >= 54:
         dis += '7'
-    elif dist >= 60:
+    elif dist >= 45:
         dis += '6'
-    elif dist >= 48:
+    elif dist >= 35:
         dis += '5'
-    elif dist >= 36:
+    elif dist >= 27:
         dis += '4'
-    elif dist >= 30:
+    elif dist >= 22.5:
         dis += '3'
-    elif dist >= 24:
-        dis += '2'
     elif dist >= 18:
+        dis += '2'
+    elif dist >= 13.5:
         dis += '1'
     else:
         dis += '0'
@@ -102,10 +102,10 @@ try:
                                          (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
                      normalize_side(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
         else:
-            state = [normalize(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
+            state = [normalize_side(round(min(distance[1]), 1)),
                      normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
                                          (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                     normalize(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
+                     normalize_side(round(min(distance[5]), 1))]
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
               '      ', round(math.degrees(sita), 1), '      ', state)
