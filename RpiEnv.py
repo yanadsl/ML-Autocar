@@ -11,7 +11,7 @@ class Env:
     dead_pin = 17
     time_record = int(time.time() * 1000)
     time_limit = 20
-
+    sensor_unusable_diff = 4
     def __init__(self, die_distance):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
@@ -80,23 +80,27 @@ class Env:
         self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
 
     def process_data(self, data):
-        sets = []
+        distance = []
         # transform byte array to int
         for a in data:
-            sets.append(int(a) / 2.0)
-        a = sets[1]
-        b = sets[2]
-        c = math.sqrt(a**2+b**2-a*b*math.cos(math.pi / 6))
-        sita = math.acos((b**2+c**2-a**2/2*b*c))
-        ans = a - math.sin(math.pi-sita)/math.sin(sita-math.pi/6)
+            distance.append(int(a) / 2.0)
+        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
+                abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
+            if distance[2] < 40:
+                a = distance[1] + 0.5
+                b = distance[2]
+            else:
+                a = distance[5] + 0.5
+                b = distance[4]
+            c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
+            sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
+            ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
+            distance[3] = round(ans, 1)
 
-        if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
-            sets[3] = ans
-
-        return self.normalize(
-                [round(min(sets[0] * math.cos(math.pi * 25 / 180), sets[1]), 1),
-                 round(min((sets[2]+1) * math.cos(math.pi * 37 / 180), sets[3], (sets[4]+1) * math.cos(math.pi * 37 / 180)), 1),
-                 round(min(sets[5], (sets[6]+1) * math.cos(math.pi * 25 / 180)), 1)]
+        return self.normalize(      # state
+                [round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1),
+                 round(min((distance[2]+1) * math.cos(math.pi * 37 / 180), distance[3], (distance[4]+1) * math.cos(math.pi * 37 / 180)), 1),
+                 round(min(distance[5], (distance[6]+1) * math.cos(math.pi * 25 / 180)), 1)]
         )
 
     def end(self):
