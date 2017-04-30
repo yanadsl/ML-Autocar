@@ -73,7 +73,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             for j in range(max_steps):
                 time_record = int(time.time() * 1000)
 
-                action = Qlearning.action_choose(state, train_indicator)
+                action = Qlearning.action_choose(state)
                 env.step(action)
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
@@ -115,7 +115,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         env.end()  # Stop Servos
         print("Finish.")
 
-    except:
+    except KeyboardInterrupt:
         env.end()
         ask = raw_input("save model?(y/n):")
         if ask == 'y':

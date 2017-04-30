@@ -22,14 +22,13 @@ class QL:
     def save(self, fname):
         self.table.to_hdf(fname, 'table')
 
-    def action_choose(self, ob, train_indicator):
+    def action_choose(self, ob):
         self.ob_exist(ob)
-        if train_indicator:
-            if np.random.uniform() > self.greedy:
-                act = self.table.ix[ob, :]
-                print('[' + act.to_string().replace('\n', '][') + ']')
-                act = act.reindex(np.random.permutation(act.index))
-                act = act.argmax()
+        if np.random.uniform() > self.greedy:
+            act = self.table.ix[ob, :]
+            print('[' + act.to_string().replace('\n', '][') + ']')
+            act = act.reindex(np.random.permutation(act.index))
+            act = act.argmax()
         else:
             act = np.random.choice(self.act)
             print("")
@@ -50,7 +49,7 @@ class QL:
         if state not in self.table.index:
             self.table = self.table.append(
                 pd.Series(
-                    [0] * len(self.a),
+                    [0] * len(self.actions),
                     index=self.table.columns,
                     name=state,
                 )
