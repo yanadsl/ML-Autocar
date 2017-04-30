@@ -125,7 +125,7 @@ class Env:
         if distance[3] > 60:
             if fixed:
                 state = normalize_side(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1])) + \
-                        str(distance[3]) + \
+                        normalize(distance[3]) + \
                         normalize_side(
                             min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)))
             else:
@@ -137,7 +137,7 @@ class Env:
         else:
             if fixed:
                 state = normalize_side(distance[1]) + \
-                        str(distance[3]) + \
+                        normalize(distance[3]) + \
                         normalize_side(distance[5])
             else:
                 state = normalize_side(distance[1]) + \

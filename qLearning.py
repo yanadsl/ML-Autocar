@@ -30,7 +30,7 @@ class QL:
             act = act.reindex(np.random.permutation(act.index))
             act = act.argmax()
         else:
-            act = np.random.choice(self.act)
+            act = np.random.choice(self.actions)
             print("")
             print("random")
         return act
