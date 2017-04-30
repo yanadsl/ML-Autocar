@@ -102,13 +102,17 @@ try:
                                          (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
                      normalize_side(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
         else:
-            state = [normalize_side(round(min(distance[1]), 1)),
+            state = [normalize_side(round(distance[1], 1)),
                      normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
                                          (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                     normalize_side(round(min(distance[5]), 1))]
+                     normalize_side(round(distance[5], 1))]
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
               '      ', round(math.degrees(sita), 1), '      ', state)
+        print(['left:' + normalize_side(round(distance[1], 1)) + '\tmid:' +
+               normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                   (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) +
+               '\tright:' + normalize_side(round(distance[5], 1))])
 
 except KeyboardInterrupt:
     pi.serial_close(h1)
