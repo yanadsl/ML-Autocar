@@ -57,7 +57,7 @@ pi = pigpio.pi()
 sensor_message_size = 7
 sensor_signal_pin = 4
 dead_pin = 17
-sensor_unusable_diff = 4
+sensor_unusable_diff = 6
 pi.set_mode(sensor_signal_pin, pigpio.OUTPUT)
 h1 = pi.serial_open("/dev/ttyAMA0", 9600)
 pi.serial_write_byte(h1, 10 * 2)
@@ -95,8 +95,8 @@ try:
             c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
-            print("修正啦FIXED:", round(ans, 1))
-            # distance[3] = round(ans, 1)
+            print("修正啦FIXED:")
+            distance[3] = round(ans, 1)
         if distance[3] > 60:
             state = [normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
                      normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
