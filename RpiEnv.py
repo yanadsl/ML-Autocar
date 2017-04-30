@@ -60,7 +60,7 @@ class Env:
             reward = -1000
             dead = True
         else:
-            reward = 13
+            reward = 20
             dead = False
         return reward, dead
 
