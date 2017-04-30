@@ -5,51 +5,49 @@ import time
 import math
 
 
-def normalize(things):
+def normalize(dist):
     dis = ''
-    for distance in things:
-        if distance >= 108:
-            dis += '8'
-        elif distance >= 72:
-            dis += '7'
-        elif distance >= 60:
-            dis += '6'
-        elif distance >= 48:
-            dis += '5'
-        elif distance >= 36:
-            dis += '4'
-        elif distance >= 30:
-            dis += '3'
-        elif distance >= 24:
-            dis += '2'
-        elif distance >= 18:
-            dis += '1'
-        else:
-            dis += '0'
+    if dist >= 108:
+        dis += '8'
+    elif dist >= 72:
+        dis += '7'
+    elif dist >= 60:
+        dis += '6'
+    elif dist >= 48:
+        dis += '5'
+    elif dist >= 36:
+        dis += '4'
+    elif dist >= 30:
+        dis += '3'
+    elif dist >= 24:
+        dis += '2'
+    elif dist >= 18:
+        dis += '1'
+    else:
+        dis += '0'
     return dis
 
 
-def normalize_side(things):
+def normalize_side(dist):
     dis = ''
-    for distance in things:
-        if distance >= 45:
-            dis += '8'
-        elif distance >= 30:
-            dis += '7'
-        elif distance >= 25:
-            dis += '6'
-        elif distance >= 20:
-            dis += '5'
-        elif distance >= 15:
-            dis += '4'
-        elif distance >= 12.5:
-            dis += '3'
-        elif distance >= 10:
-            dis += '2'
-        elif distance >= 7.5:
-            dis += '1'
-        else:
-            dis += '0'
+    if dist >= 45:
+        dis += '8'
+    elif dist >= 30:
+        dis += '7'
+    elif dist >= 25:
+        dis += '6'
+    elif dist >= 20:
+        dis += '5'
+    elif dist >= 15:
+        dis += '4'
+    elif dist >= 12.5:
+        dis += '3'
+    elif dist >= 10:
+        dis += '2'
+    elif dist >= 7.5:
+        dis += '1'
+    else:
+        dis += '0'
     return dis
 
 
