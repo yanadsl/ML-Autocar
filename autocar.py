@@ -10,7 +10,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     greedy = 0.05
     decay = 0.7
     straight_die_distance = 10
-    side_die_distance = 10
+    side_die_distance = 7
     average_step_length = 5
     np.random.seed(1337)
 
