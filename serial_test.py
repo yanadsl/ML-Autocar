@@ -36,11 +36,20 @@ try:
             sets.append(int(a) / 2.0)
         if pi.read(dead_pin) == pigpio.LOW:
             print("dead")
+
+        a = sets[1]
+        b = sets[2]
+        c = math.sqrt(a ** 2 + b ** 2 - a * b * math.cos(math.pi / 6))
+        sita = math.acos((b ** 2 + c ** 2 - a ** 2 / 2 * b * c))
+        ans = a - math.sin(math.pi - sita) / math.sin(sita - math.pi / 6)
+
+        if not abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7:
+            sets[3] = ans
+
         print(["%1f" % (sets[0] / math.cos(math.pi / 6)), sets[1],
                "%1f" % ((sets[2]+1) / math.cos(math.pi * 37 / 180)), sets[3], "%1f" % ((sets[4]+1) / math.cos(math.pi *37 / 180)),
                sets[5], "%1f" % (sets[6] / math.cos(math.pi / 6))])
         # distance = normalize(distance)
-        #print('distance:' + str(distance))
 except KeyboardInterrupt:
     pi.serial_close(h1)
     sys.exit(0)

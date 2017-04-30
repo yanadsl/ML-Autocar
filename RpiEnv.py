@@ -15,6 +15,7 @@ class Env:
     def __init__(self, die_distance):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
+        self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
         self.pi.serial_write_byte(self.h1, die_distance*2)
 
@@ -83,10 +84,18 @@ class Env:
         # transform byte array to int
         for a in data:
             sets.append(int(a) / 2.0)
+        a = sets[1]
+        b = sets[2]
+        c = math.sqrt(a**2+b**2-a*b*math.cos(math.pi / 6))
+        sita = math.acos((b**2+c**2-a**2/2*b*c))
+        ans = a - math.sin(math.pi-sita)/math.sin(sita-math.pi/6)
+
+        if not abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7:
+            sets[3] = ans
 
         return self.normalize(
                 [min(sets[0] * math.cos(math.pi / 6), sets[1]),
-                 min(sets[2] * math.cos(math.pi / 6), sets[3], sets[4] * math.cos(math.pi / 6)),
+                 min((sets[2]+1) * math.cos(math.pi * 37 / 180), sets[3], (sets[4]+1) * math.cos(math.pi * 37 / 180)),
                  min(sets[5], sets[6] * math.cos(math.pi / 6))]
         )
 
