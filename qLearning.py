@@ -22,13 +22,14 @@ class QL:
     def save(self, fname):
         self.table.to_hdf(fname, 'table')
 
-    def action_choose(self, ob):
+    def action_choose(self, ob, train_indicator):
         self.ob_exist(ob)
-        if np.random.uniform() > self.greedy:
-            action = self.table.ix[ob, :]
-            print('[' + action.to_string().replace('\n', '][') + ']')
-            action = action.reindex(np.random.permutation(action.index))
-            action = action.argmax()
+        if train_indicator:
+            if np.random.uniform() > self.greedy:
+                action = self.table.ix[ob, :]
+                print('[' + action.to_string().replace('\n', '][') + ']')
+                action = action.reindex(np.random.permutation(action.index))
+                action = action.argmax()
         else:
             action = np.random.choice(self.actions)
             print("random")

@@ -8,7 +8,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     learning_rate = 0.4
     greedy = 0.1
     decay = 0.9
-    die_distance = 10
+    die_distance = 8
     np.random.seed(1337)
 
     episode_count = 200
@@ -32,7 +32,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             for j in range(max_steps):
                 time_record = int(time.time() * 1000)
 
-                action = Qlearning.action_choose(state)
+                action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
 
                 new_state = env.get_respond()

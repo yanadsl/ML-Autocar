@@ -3,6 +3,52 @@ import pigpio
 import math
 
 
+def normalize_side(dist):
+    dis = ''
+    if dist >= 45:
+        dis += '8'
+    elif dist >= 30:
+        dis += '7'
+    elif dist >= 25:
+        dis += '6'
+    elif dist >= 20:
+        dis += '5'
+    elif dist >= 15:
+        dis += '4'
+    elif dist >= 12.5:
+        dis += '3'
+    elif dist >= 10:
+        dis += '2'
+    elif dist >= 7.5:
+        dis += '1'
+    else:
+        dis += '0'
+    return dis
+
+
+def normalize(dist):
+    dis = ''
+    if dist >= 81:
+        dis += '8'
+    elif dist >= 54:
+        dis += '7'
+    elif dist >= 45:
+        dis += '6'
+    elif dist >= 35:
+        dis += '5'
+    elif dist >= 27:
+        dis += '4'
+    elif dist >= 22.5:
+        dis += '3'
+    elif dist >= 18:
+        dis += '2'
+    elif dist >= 13.5:
+        dis += '1'
+    else:
+        dis += '0'
+    return dis
+
+
 class Env:
     left_servo_pin = 13
     right_servo_pin = 12
@@ -11,13 +57,14 @@ class Env:
     dead_pin = 17
     time_record = int(time.time() * 1000)
     time_limit = 20
-    sensor_unusable_diff = 4
+    sensor_unusable_diff = 6
+
     def __init__(self, die_distance):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
-        self.pi.serial_write_byte(self.h1, die_distance*2)
+        self.pi.serial_write_byte(self.h1, die_distance * 2)
 
     def step(self, action):
         if action == 'left':
@@ -52,40 +99,18 @@ class Env:
             dead = False
         return reward, dead
 
-    def normalize(self, things):
-        dis = ''
-        for distance in things:
-            if distance >= 36:
-                dis += '8'
-            elif distance >= 24:
-                dis += '7'
-            elif distance >= 20:
-                dis += '6'
-            elif distance >= 16:
-                dis += '5'
-            elif distance >= 12:
-                dis += '4'
-            elif distance >= 10:
-                dis += '3'
-            elif distance >= 8:
-                dis += '2'
-            elif distance >= 6:
-                dis += '1'
-            else:
-                dis += '0'
-        return dis
-
     def set_speed(self, lspeed=0, rspeed=0):
         self.pi.hardware_PWM(self.left_servo_pin, 800, int(lspeed) * 10000)
         self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
 
     def process_data(self, data):
         distance = []
+        fixed = False
         # transform byte array to int
         for a in data:
             distance.append(int(a) / 2.0)
         if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
-                abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
+                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
             if distance[2] < 40:
                 a = distance[1] + 0.5
                 b = distance[2]
@@ -96,12 +121,30 @@ class Env:
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             distance[3] = round(ans, 1)
-
-        return self.normalize(      # state
-                [round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1),
-                 round(min((distance[2]+1) * math.cos(math.pi * 37 / 180), distance[3], (distance[4]+1) * math.cos(math.pi * 37 / 180)), 1),
-                 round(min(distance[5], (distance[6]+1) * math.cos(math.pi * 25 / 180)), 1)]
-        )
+            fixed = True
+        if distance[3] > 60:
+            if fixed:
+                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                        distance[3] + \
+                        normalize_side(
+                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+            else:
+                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                        normalize_side(
+                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+        else:
+            if fixed:
+                state = normalize_side(round(distance[1], 1)) + \
+                        distance[3] + \
+                        normalize_side(round(distance[5], 1))
+            else:
+                state = normalize_side(round(distance[1], 1)) + \
+                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                        normalize_side(round(distance[5], 1))
+        return state
 
     def end(self):
         self.set_speed(0, 0)
