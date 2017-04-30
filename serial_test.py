@@ -4,6 +4,30 @@ import pigpio
 import time
 import math
 
+
+def normalize(things):
+    dis = ''
+    for distance in things:
+        if distance >= 36:
+            dis += '8'
+        elif distance >= 24:
+            dis += '7'
+        elif distance >= 20:
+            dis += '6'
+        elif distance >= 16:
+            dis += '5'
+        elif distance >= 12:
+            dis += '4'
+        elif distance >= 10:
+            dis += '3'
+        elif distance >= 8:
+            dis += '2'
+        elif distance >= 6:
+            dis += '1'
+        else:
+            dis += '0'
+    return dis
+
 time_record = int(time.time() * 1000)
 time_limit = 50
 pi = pigpio.pi()
@@ -49,10 +73,16 @@ try:
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             distance[3] = round(ans, 1)
+        state = normalize(
+            [round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1),
+             round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                       (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1),
+             round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1)]
+        )
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
-              '      ', round(math.degrees(sita), 1))
-        # distance = normalize(distance)
+              '      ', round(math.degrees(sita), 1), '      ', state)
+
 except KeyboardInterrupt:
     pi.serial_close(h1)
     sys.exit(0)
