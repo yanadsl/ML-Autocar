@@ -16,13 +16,13 @@ class Env:
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
-        self.pi.serial_write_byte(self.h1, die_distance)
+        self.pi.serial_write_byte(self.h1, die_distance*2)
 
     def step(self, action):
         if action == 'left':
             self.set_speed(20, 100)
         elif action == 'go':
-            self.set_speed(100, 100)
+            self.set_speed(97, 100)
         else:
             self.set_speed(100, 20)
 
