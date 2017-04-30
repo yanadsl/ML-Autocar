@@ -90,13 +90,13 @@ class Env:
         sita = math.acos((b**2+c**2-a**2/2*b*c))
         ans = a - math.sin(math.pi-sita)/math.sin(sita-math.pi/6)
 
-        if not abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7:
+        if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
             sets[3] = ans
 
         return self.normalize(
-                [min(sets[0] * math.cos(math.pi / 6), sets[1]),
-                 min((sets[2]+1) * math.cos(math.pi * 37 / 180), sets[3], (sets[4]+1) * math.cos(math.pi * 37 / 180)),
-                 min(sets[5], sets[6] * math.cos(math.pi / 6))]
+                [round(min(sets[0] * math.cos(math.pi * 25 / 180), sets[1]), 1),
+                 round(min((sets[2]+1) * math.cos(math.pi * 37 / 180), sets[3], (sets[4]+1) * math.cos(math.pi * 37 / 180)), 1),
+                 round(min(sets[5], (sets[6]+1) * math.cos(math.pi * 25 / 180)), 1)]
         )
 
     def end(self):
