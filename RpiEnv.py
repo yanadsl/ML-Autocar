@@ -74,7 +74,7 @@ class Env:
         else:
             self.set_speed(100, 20)
 
-    def get_respond(self):
+    def get_respond(self):  # FPGA sends data once when the signal_pin is high
         # delay at least 50ms to get right value of sonic sensor
         while (int(time.time() * 1000) - self.time_record) <= self.time_limit:
             time.sleep(0.002)
@@ -95,7 +95,7 @@ class Env:
             reward = -1000
             dead = True
         else:
-            reward = 10
+            reward = 13
             dead = False
         return reward, dead
 
@@ -103,7 +103,7 @@ class Env:
         self.pi.hardware_PWM(self.left_servo_pin, 800, int(lspeed) * 10000)
         self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
 
-    def process_data(self, data):
+    def process_data(self, data):  # some algorithms to correct the sensors
         distance = []
         fixed = False
         # transform byte array to int
@@ -124,26 +124,26 @@ class Env:
             fixed = True
         if distance[3] > 60:
             if fixed:
-                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                state = normalize_side(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1])) + \
                         str(distance[3]) + \
                         normalize_side(
-                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+                            min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)))
             else:
-                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
-                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                state = normalize_side(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1])) + \
+                        normalize(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                      (distance[4] + 1) * math.cos(math.pi * 37 / 180))) + \
                         normalize_side(
-                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+                            min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)))
         else:
             if fixed:
-                state = normalize_side(round(distance[1], 1)) + \
-                        str(distance[3] )+ \
-                        normalize_side(round(distance[5], 1))
+                state = normalize_side(distance[1]) + \
+                        str(distance[3]) + \
+                        normalize_side(distance[5])
             else:
-                state = normalize_side(round(distance[1], 1)) + \
-                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
-                        normalize_side(round(distance[5], 1))
+                state = normalize_side(distance[1]) + \
+                        normalize(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                      (distance[4] + 1) * math.cos(math.pi * 37 / 180))) + \
+                        normalize_side(distance[5])
         return state
 
     def end(self):

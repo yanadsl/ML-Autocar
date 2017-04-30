@@ -126,6 +126,6 @@ try:
               '      ', round(math.degrees(sita), 1), '      ', state)
 
 
-except KeyboardInterrupt:
+except:
     pi.serial_close(h1)
     sys.exit(0)

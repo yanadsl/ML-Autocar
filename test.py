@@ -26,7 +26,7 @@ try:
             set_speed(0, 0)
             pi.serial_close(h1)
 
-except KeyboardInterrupt:
+except :
     set_speed(0, 0)
     pi.serial_close(h1)
     sys.exit(0)

@@ -3,28 +3,69 @@ from RpiEnv import Env
 import numpy as np
 from qLearning import QL
 
+
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
-    learning_rate = 0.4
-    greedy = 0.1
-    decay = 0.9
+    learning_rate = 0.3
+    greedy = 0
+    decay = 0.7
     die_distance = 8
+    average_step_length = 5
     np.random.seed(1337)
 
-    episode_count = 200
-    max_steps = 10000
+    episode_count = 300
+    max_steps = 30000
 
+    step_average = 0
+    step_queue = []
     # initialize pigpiod and set at which distance is dead
     env = Env(die_distance)
 
     Qlearning = QL(actions, decay, greedy, learning_rate)
 
-    # Now load the weight
+    # load weight
     Qlearning.load("Qtable.h5")
+
+    # load episode of last time
+    try:
+        file = open('episode.txt', 'r')
+        episode_num = int(file.read())
+        file.close()
+        print("Episode number: " + str(episode_num))
+    except:
+        episode_num = 1
+        print("Episode number: Error")
+    # load best step of last time
+    try:
+        file = open('best_step.txt', 'r')
+        best_step = int(file.read())
+        file.close()
+        print("best_step: " + str(best_step))
+    except:
+        best_step = 0
+        print("best_step: Error")
 
     print("Autocar Experiment Start.")
     try:
-        for i in range(episode_count):
+        for i in range(episode_num, episode_count):
+            file = open('episode.txt', 'w')
+            file.write(str(i))
+            file.close()
+
+            print("step_average: " + str(step_average))
+            # change parameters by step_average = least (average_step_length) times step average
+            if step_average < 200:
+                Qlearning.parameter_set(0.5, 0.05, 0.7)
+            elif step_average < 400:
+                Qlearning.parameter_set(0.5, 0.03, 0.7)
+            elif step_average < 600:
+                Qlearning.parameter_set(0.5, 0.02, 0.7)
+            elif step_average < 800:
+                Qlearning.parameter_set(0.5, 0.01, 0.7)
+            elif step_average < 5000:
+                Qlearning.parameter_set(0.5, 0.005, 0.7)
+            else:
+                Qlearning.parameter_set(0.3, 0.001, 0.7)
 
             state = env.get_respond()
             step = 0
@@ -34,7 +75,6 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
-
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
                 if train_indicator:
@@ -52,16 +92,30 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 state = new_state
                 step += 1
 
+            step_queue.append(step)
+            if len(step_queue) > average_step_length:
+                step_queue.pop(0)
+            step_average = sum(step_queue)/average_step_length
+            if np.mod(i, 10) == 0:    # save every 10 times
+                Qlearning.save("Qtable" + str(i) + ".h5")
+
             if train_indicator:
                 print("Now we save model")
                 Qlearning.save("Qtable.h5")
+                if step > best_step:
+                    file = open('best_step.txt', 'w')
+                    file.write(str(step))
+                    file.close()
+                score = open('score.txt', 'a')
+                score.write("Episode: " + str(i) + "\tStep: " + str(step) + "\n")
+                score.close()
 
             print("")
             raw_input("Ready for next? Press return")
         env.end()  # Stop Servos
         print("Finish.")
 
-    except KeyboardInterrupt:
+    except:
         env.end()
         ask = raw_input("save model?(y/n):")
         if ask == 'y':

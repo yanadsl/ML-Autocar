@@ -32,6 +32,7 @@ class QL:
                 action = action.argmax()
         else:
             action = np.random.choice(self.actions)
+            print("")
             print("random")
         return action
 
@@ -55,7 +56,7 @@ class QL:
                 )
             )
 
-    def parameter_change(self, step):
+    def parameter_change(self, step):  # write equation to change parameters here
         if step >= 200:
             if step < 450:
                 self.learning_rate += (0.5 - self.lr) / (450 - 200)
@@ -64,6 +65,11 @@ class QL:
                 self.learning_rate = 0.5
                 self.greedy = 0
 
-    def parameter_reset(self):
+    def parameter_reset(self):  # reset parameter to original(value when qLearning initialize)
         self.learning_rate = self.lr
         self.greedy = self.g
+
+    def parameter_set(self, learning_rate, greedy, decay):
+        self.learning_rate = learning_rate
+        self.greedy = greedy
+        self.decay = decay
