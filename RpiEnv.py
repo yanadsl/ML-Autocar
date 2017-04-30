@@ -70,7 +70,7 @@ class Env:
         if action == 'left':
             self.set_speed(20, 100)
         elif action == 'go':
-            self.set_speed(97, 100)
+            self.set_speed(75, 85)
         else:
             self.set_speed(100, 20)
 

@@ -26,31 +26,31 @@ class QL:
         self.ob_exist(ob)
         if train_indicator:
             if np.random.uniform() > self.greedy:
-                action = self.table.ix[ob, :]
-                print('[' + action.to_string().replace('\n', '][') + ']')
-                action = action.reindex(np.random.permutation(action.index))
-                action = action.argmax()
+                act = self.table.ix[ob, :]
+                print('[' + act.to_string().replace('\n', '][') + ']')
+                act = act.reindex(np.random.permutation(act.index))
+                act = act.argmax()
         else:
-            action = np.random.choice(self.actions)
+            act = np.random.choice(self.act)
             print("")
             print("random")
-        return action
+        return act
 
-    def learn(self, state, action, reward, next_state, done=False):
+    def learn(self, state, a, reward, next_state, done=False):
         self.ob_exist(next_state)
-        q_guess = self.table.ix[state, action]
+        q_guess = self.table.ix[state, a]
         if done:
             q = reward
         else:
             # q = reward + self.decay * self.table.ix[next_state, :].max()     # Q-learning
-            q = reward + self.decay * self.table.ix[next_state, action]  # SARSA
-        self.table.ix[state, action] += self.learning_rate * (q - q_guess)
+            q = reward + self.decay * self.table.ix[next_state, a]  # SARSA
+        self.table.ix[state, a] += self.learning_rate * (q - q_guess)
 
     def ob_exist(self, state):
         if state not in self.table.index:
             self.table = self.table.append(
                 pd.Series(
-                    [0] * len(self.actions),
+                    [0] * len(self.a),
                     index=self.table.columns,
                     name=state,
                 )

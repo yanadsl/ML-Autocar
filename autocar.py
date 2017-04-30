@@ -7,9 +7,9 @@ from qLearning import QL
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
     learning_rate = 0.3
-    greedy = 0
+    greedy = 0.05
     decay = 0.7
-    die_distance = 8
+    die_distance = 10
     average_step_length = 5
     np.random.seed(1337)
 
