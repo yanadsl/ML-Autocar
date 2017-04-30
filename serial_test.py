@@ -32,21 +32,21 @@ def normalize(things):
 def normalize_side(things):
     dis = ''
     for distance in things:
-        if distance >= 36:
+        if distance >= 45:
             dis += '8'
-        elif distance >= 24:
+        elif distance >= 30:
             dis += '7'
-        elif distance >= 20:
+        elif distance >= 25:
             dis += '6'
-        elif distance >= 16:
+        elif distance >= 20:
             dis += '5'
-        elif distance >= 12:
+        elif distance >= 15:
             dis += '4'
-        elif distance >= 10:
+        elif distance >= 12.5:
             dis += '3'
-        elif distance >= 8:
+        elif distance >= 10:
             dis += '2'
-        elif distance >= 6:
+        elif distance >= 7.5:
             dis += '1'
         else:
             dis += '0'
@@ -98,10 +98,16 @@ try:
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             distance[3] = round(ans, 1)
-        state = [normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
-                 normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                     (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                 normalize_side(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
+        if distance[3] > 60:
+            state = [normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
+                     normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                         (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
+                     normalize_side(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
+        else:
+            state = [normalize(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
+                     normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                         (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
+                     normalize(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
               '      ', round(math.degrees(sita), 1), '      ', state)
