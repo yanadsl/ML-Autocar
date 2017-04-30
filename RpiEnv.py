@@ -59,12 +59,13 @@ class Env:
     time_limit = 20
     sensor_unusable_diff = 6
 
-    def __init__(self, die_distance):
+    def __init__(self, straight_die_distance, side_die_distance):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
-        self.pi.serial_write_byte(self.h1, die_distance * 2)
+        self.pi.serial_write_byte(self.h1, straight_die_distance * 2)
+        self.pi.serial_write_byte(self.h1, side_die_distance * 2)
 
     def step(self, action):
         if action == 'left':
