@@ -43,10 +43,10 @@ try:
         if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
             sets[3] = ans
 
-        print([round(sets[0] * math.cos(math.pi * 25 / 180), sets[1], 1),
-               round((sets[2] + 1) * math.cos(math.pi * 35 / 180), sets[3],
-                     (sets[4] + 1) * math.cos(math.pi * 35 / 180), 1),
-               round(sets[5], (sets[6] + 1) * math.cos(math.pi * 25 / 180), 1)])
+        print([round(sets[0] * math.cos(math.pi * 25 / 180), 1), sets[1],
+               round((sets[2] + 1) * math.cos(math.pi * 35 / 180), 1), sets[3],
+               round((sets[4] + 1) * math.cos(math.pi * 35 / 180), 1),
+               sets[5], round((sets[6] + 1) * math.cos(math.pi * 25 / 180), 1)])
         # distance = normalize(distance)
 except KeyboardInterrupt:
     pi.serial_close(h1)
