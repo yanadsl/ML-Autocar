@@ -34,14 +34,17 @@ try:
         if pi.read(dead_pin) == pigpio.LOW:
             print("dead")
 
-        a = sets[1]
-        b = sets[2]
-        c = math.sqrt(a ** 2 + b ** 2 - a * b * math.cos(math.pi * 25 / 180))
-        sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
-        ans = a - math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
-
         if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
-            sets[3] = ans
+            if abs(sets[2] - sets[1]) > 7:
+                a = sets[1]
+                b = sets[2]
+            else:
+                a = sets[7]
+                b = sets[6]
+            c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
+            sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
+            ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
+            sets[3] = round(ans, 1)
 
         print([round(sets[0] * math.cos(math.pi * 25 / 180), 1), sets[1],
                round((sets[2] + 1) * math.cos(math.pi * 35 / 180), 1), sets[3],
