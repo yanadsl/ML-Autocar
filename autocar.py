@@ -113,6 +113,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
             print("")
             env.wait()
+            time.sleep(1.5)
         env.end()  # Stop Servos
         print("Finish.")
 
