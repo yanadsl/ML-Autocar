@@ -35,8 +35,8 @@ try:
         if pi.read(dead_pin) == pigpio.LOW:
             print("dead")
 
-        if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
-            print("SMALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLER")
+        if (abs(sets[2] - sets[1]) < 7 and sets[2] < 40) or (abs(sets[4] - sets[5]) < 7 and set[4] < 40):
+            print("修正FIXED")
             if sets[2] < 40:
                 a = sets[1]+0.5
                 b = sets[2]
