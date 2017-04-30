@@ -24,9 +24,12 @@ class QL:
 
     def action_choose(self, ob):
         self.ob_exist(ob)
+        l = []
         if np.random.uniform() > self.greedy:
             act = self.table.ix[ob, :]
-            print('[' + act.to_string().replace('\n', '][') + ']')
+            for a in act:
+                l.append(round(a, 2))
+            print(l)
             act = act.reindex(np.random.permutation(act.index))
             act = act.argmax()
         else:
