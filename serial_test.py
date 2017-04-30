@@ -36,21 +36,18 @@ try:
 
         if not (abs(sets[2] - sets[1]) > 7 and abs(sets[4] - sets[5]) > 7):
             print("SMALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLER")
-            if abs(sets[2] - sets[1]) > 7:
-                a = sets[1]
+            if abs(sets[2] - sets[1]) < 7:
+                a = sets[1]+0.5
                 b = sets[2]
             else:
-                a = sets[7]
-                b = sets[6]
+                a = sets[5]+0.5
+                b = sets[4]
             c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             sets[3] = round(ans, 1)
 
-        print([sets[0], sets[1],
-               sets[2], sets[3],
-               sets[4],
-               sets[5], sets[6]])
+        print([sets[0], sets[1], sets[2], sets[3], sets[4], sets[5], sets[6]], sita)
         # distance = normalize(distance)
 except KeyboardInterrupt:
     pi.serial_close(h1)
