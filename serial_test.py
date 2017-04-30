@@ -78,6 +78,7 @@ try:
         (b, d) = pi.serial_read(h1, sensor_message_size)
         pi.write(sensor_signal_pin, pigpio.LOW)
         distance = []
+        fixed = False
         for a in d:
             distance.append(int(a) / 2.0)
         if pi.read(dead_pin) == pigpio.LOW:
@@ -96,25 +97,30 @@ try:
             sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             print("修正啦FIXED:")
+            fixed = True
             distance[3] = round(ans, 1)
         if distance[3] > 60:
-            state = [normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
-                     normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                         (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                     normalize_side(round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))]
-            print([(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)),
-                   (round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                              (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                   (round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))])
+            if fixed:
+                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                        distance[3] + \
+                        normalize_side(
+                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+            else:
+                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                        normalize_side(
+                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
         else:
-            state = [normalize_side(round(distance[1], 1)),
-                     normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                         (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)),
-                     normalize_side(round(distance[5], 1))]
-            print(['left:' + str(round(distance[1], 1)) + '   mid:' +
-                   str(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                 (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) +
-                   '   right:' + str(round(distance[5], 1))])
+            if fixed:
+                state = normalize_side(round(distance[1], 1)) + \
+                        distance[3] + \
+                        normalize_side(round(distance[5], 1))
+            else:
+                state = normalize_side(round(distance[1], 1)) + \
+                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                        normalize_side(round(distance[5], 1))
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
               '      ', round(math.degrees(sita), 1), '      ', state)
