@@ -4,48 +4,12 @@ import math
 
 
 def normalize_side(dist):
-    dis = ''
-    if dist >= 45:
-        dis += '8'
-    elif dist >= 30:
-        dis += '7'
-    elif dist >= 25:
-        dis += '6'
-    elif dist >= 20:
-        dis += '5'
-    elif dist >= 15:
-        dis += '4'
-    elif dist >= 12.5:
-        dis += '3'
-    elif dist >= 10:
-        dis += '2'
-    elif dist >= 7.5:
-        dis += '1'
-    else:
-        dis += '0'
+    dis = str(math.floor(float(dist) / 2.5))
     return dis
 
 
 def normalize(dist):
-    dis = ''
-    if dist >= 81:
-        dis += '8'
-    elif dist >= 54:
-        dis += '7'
-    elif dist >= 45:
-        dis += '6'
-    elif dist >= 35:
-        dis += '5'
-    elif dist >= 27:
-        dis += '4'
-    elif dist >= 22.5:
-        dis += '3'
-    elif dist >= 18:
-        dis += '2'
-    elif dist >= 13.5:
-        dis += '1'
-    else:
-        dis += '0'
+    dis = str(math.floor(float(dist)/4.5))
     return dis
 
 
@@ -54,6 +18,7 @@ class Env:
     right_servo_pin = 12
     sensor_signal_pin = 4
     sensor_message_size = 7
+    next_signal_pin = 24
     dead_pin = 17
     time_record = int(time.time() * 1000)
     time_limit = 20
@@ -64,8 +29,7 @@ class Env:
         self.pi.set_mode(self.sensor_signal_pin, pigpio.OUTPUT)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
-        self.pi.serial_write_byte(self.h1, straight_die_distance * 2)
-        self.pi.serial_write_byte(self.h1, side_die_distance * 2)
+
 
     def step(self, action):
         if action == 'left':
@@ -146,6 +110,10 @@ class Env:
                                       (distance[4] + 1) * math.cos(math.pi * 37 / 180))) + \
                         normalize_side(distance[5])
         return state
+
+    def wait(self):
+        while not self.pi.read(self.next_signal_pin):
+            pass
 
     def end(self):
         self.set_speed(0, 0)

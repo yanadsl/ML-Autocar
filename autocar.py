@@ -7,7 +7,7 @@ from qLearning import QL
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
     learning_rate = 0.3
-    greedy = 0.05
+    greedy = 0.005
     decay = 0.7
     straight_die_distance = 10
     side_die_distance = 7
@@ -55,15 +55,15 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
             print("step_average: " + str(step_average))
             # change parameters by step_average = least (average_step_length) times step average
-            if step_average < 200:
+            if step_average < 100:
                 Qlearning.parameter_set(0.5, 0.05, 0.7)
-            elif step_average < 400:
+            elif step_average < 200:
                 Qlearning.parameter_set(0.5, 0.03, 0.7)
-            elif step_average < 600:
+            elif step_average < 300:
                 Qlearning.parameter_set(0.5, 0.02, 0.7)
-            elif step_average < 800:
+            elif step_average < 400:
                 Qlearning.parameter_set(0.5, 0.01, 0.7)
-            elif step_average < 5000:
+            elif step_average < 1000:
                 Qlearning.parameter_set(0.5, 0.005, 0.7)
             else:
                 Qlearning.parameter_set(0.3, 0.001, 0.7)
@@ -113,7 +113,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 score.close()
 
             print("")
-            raw_input("Ready for next? Press return")
+            env.wait()
         env.end()  # Stop Servos
         print("Finish.")
 
