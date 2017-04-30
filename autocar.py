@@ -46,6 +46,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         print("best_step: Error")
 
     print("Autocar Experiment Start.")
+    env.wait()
     try:
         for i in range(episode_num, episode_count):
             file = open('episode.txt', 'w')
