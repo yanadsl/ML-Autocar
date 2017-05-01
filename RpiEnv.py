@@ -5,21 +5,21 @@ import math
 
 def normalize_side(dist):
     dis = ''
-    if dist >= 45:
+    if dist >= 50:
         dis += '8'
-    elif dist >= 30:
+    elif dist >= 36:
         dis += '7'
-    elif dist >= 25:
+    elif dist >= 30:
         dis += '6'
-    elif dist >= 20:
+    elif dist >= 24:
         dis += '5'
-    elif dist >= 15:
+    elif dist >= 18:
         dis += '4'
-    elif dist >= 12.5:
+    elif dist >= 15:
         dis += '3'
-    elif dist >= 10:
+    elif dist >= 12:
         dis += '2'
-    elif dist >= 7.5:
+    elif dist >= 9:
         dis += '1'
     else:
         dis += '0'
