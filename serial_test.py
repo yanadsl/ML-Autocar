@@ -29,8 +29,8 @@ pi.write(sensor_signal_pin, pigpio.LOW)
 print("start")
 sita = 1
 distance = []
-try:
-    while True:
+while True:
+    try:
         while (int(time.time() * 1000) - time_record) <= time_limit:
             time.sleep(0.002)
         time_record = int(time.time() * 1000)
@@ -65,16 +65,16 @@ try:
             distance[3] = round(ans, 1)
         if distance[3] > 60:
             if fixed:
-                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                state = normalize_side(round(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
                         normalize(distance[3]) + \
                         normalize_side(
-                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+                            round(min(distance[5], (distance[6] + 1) / math.cos(math.pi * 25 / 180)), 1))
             else:
-                state = normalize_side(round(min(distance[0] * math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
-                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                state = normalize_side(round(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1]), 1)) + \
+                        normalize(round(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) / math.cos(math.pi * 37 / 180)), 1)) + \
                         normalize_side(
-                            round(min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)), 1))
+                            round(min(distance[5], (distance[6] + 1) / math.cos(math.pi * 25 / 180)), 1))
         else:
             if fixed:
                 state = normalize_side(round(distance[1], 1)) + \
@@ -82,14 +82,14 @@ try:
                         normalize_side(round(distance[5], 1))
             else:
                 state = normalize_side(round(distance[1], 1)) + \
-                        normalize(round(min((distance[2] + 1) * math.cos(math.pi * 37 / 180), distance[3],
-                                            (distance[4] + 1) * math.cos(math.pi * 37 / 180)), 1)) + \
+                        normalize(round(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
+                                            (distance[4] + 1) / math.cos(math.pi * 37 / 180)), 1)) + \
                         normalize_side(round(distance[5], 1))
 
         print([distance[0], distance[1], distance[2], distance[3], distance[4], distance[5], distance[6]],
               '      ', round(math.degrees(sita), 1), '      ', state)
 
 
-except:
-    pi.serial_close(h1)
-    sys.exit(0)
+    except:
+        pi.serial_close(h1)
+        sys.exit(0)
