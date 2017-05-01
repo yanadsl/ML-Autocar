@@ -28,7 +28,6 @@ def normalize_side(dist):
 
 def normalize(dist):
     dis = ''
-    print(dist)
     if dist >= 81:
         dis += '8'
     elif dist >= 54:
