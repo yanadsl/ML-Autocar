@@ -45,6 +45,15 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         best_step = 0
         print("best_step: Error")
 
+    try:
+        file = open('step_average.txt', 'r')
+        step_average = int(file.read())
+        file.close()
+        print("step_average:" + str(step_average))
+    except:
+        step_average = 0
+        print ("step_average: Error")
+
     print("Autocar Experiment Start.")
     env.wait()
     time.sleep(0.7)
@@ -95,10 +104,12 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 state = new_state
                 step += 1
             env.set_speed(0, 0)
+
             step_queue.append(step)
             if len(step_queue) > average_step_length:
                 step_queue.pop(0)
             step_average = sum(step_queue)/average_step_length
+
             if np.mod(i, 10) == 0:    # save every 10 times
                 Qlearning.save("Qtable" + str(i) + ".h5")
 
@@ -112,6 +123,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 score = open('score.txt', 'a')
                 score.write("Episode: " + str(i) + "\tStep: " + str(step) + "\n")
                 score.close()
+                file = open('step_average.txt', 'w')
+                file.write(str(step_average))
+                file.close()
 
             print("")
             env.wait()
