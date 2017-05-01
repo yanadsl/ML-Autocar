@@ -57,15 +57,15 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             print("step_average: " + str(step_average))
             # change parameters by step_average = least (average_step_length) times step average
             if step_average < 100:
-                Qlearning.parameter_set(0.5, 0.05, 0.7)
+                Qlearning.parameter_set(0.4, 0.05, 0.7)
             elif step_average < 200:
-                Qlearning.parameter_set(0.5, 0.03, 0.7)
+                Qlearning.parameter_set(0.4, 0.03, 0.7)
             elif step_average < 300:
-                Qlearning.parameter_set(0.5, 0.02, 0.7)
+                Qlearning.parameter_set(0.4, 0.02, 0.7)
             elif step_average < 400:
-                Qlearning.parameter_set(0.5, 0.01, 0.7)
+                Qlearning.parameter_set(0.4, 0.01, 0.7)
             elif step_average < 1000:
-                Qlearning.parameter_set(0.5, 0.005, 0.7)
+                Qlearning.parameter_set(0.4, 0.005, 0.7)
             else:
                 Qlearning.parameter_set(0.3, 0.001, 0.7)
 
@@ -77,7 +77,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state)
                 env.step(action)
-                time.sleep(0.09)
+                time.sleep(0.07)
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
                 if train_indicator:
