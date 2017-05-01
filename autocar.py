@@ -47,6 +47,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
     print("Autocar Experiment Start.")
     env.wait()
+    time.sleep(0.7)
     try:
         for i in range(episode_num, episode_count):
             file = open('episode.txt', 'w')
@@ -114,7 +115,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
             print("")
             env.wait()
-            time.sleep(1.5)
+            time.sleep(0.7)
         env.end()  # Stop Servos
         print("Finish.")
 
