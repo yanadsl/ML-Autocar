@@ -4,17 +4,49 @@ import math
 
 
 def normalize_side(dist):
-    dis = int(math.floor(float(dist) / 2.5))
-    if dis > 18:
-        dis = 18
-    return str(dis)
+    dis = ''
+    if dist >= 45:
+        dis += '8'
+    elif dist >= 30:
+        dis += '7'
+    elif dist >= 25:
+        dis += '6'
+    elif dist >= 20:
+        dis += '5'
+    elif dist >= 15:
+        dis += '4'
+    elif dist >= 12.5:
+        dis += '3'
+    elif dist >= 10:
+        dis += '2'
+    elif dist >= 7.5:
+        dis += '1'
+    else:
+        dis += '0'
+    return dis
 
 
 def normalize(dist):
-    dis = int(math.floor(float(dist)/4.5))
-    if dis > 20:
-        dis = 20
-    return str(dis)
+    dis = ''
+    if dist >= 81:
+        dis += '8'
+    elif dist >= 54:
+        dis += '7'
+    elif dist >= 45:
+        dis += '6'
+    elif dist >= 35:
+        dis += '5'
+    elif dist >= 27:
+        dis += '4'
+    elif dist >= 22.5:
+        dis += '3'
+    elif dist >= 18:
+        dis += '2'
+    elif dist >= 13.5:
+        dis += '1'
+    else:
+        dis += '0'
+    return dis
 
 
 class Env:
@@ -117,7 +149,8 @@ class Env:
 
     def wait(self):
         while not self.pi.read(self.next_signal_pin):
-            pass
+            time.sleep(0.001)
+
 
     def end(self):
         self.set_speed(0, 0)
