@@ -125,26 +125,26 @@ class Env:
             fixed = True
         if distance[3] > 60:
             if fixed:
-                state = normalize_side(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
+                state = normalize(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
                         normalize(distance[3]) + \
-                        normalize_side(
+                        normalize(
                             min(distance[5], (distance[6] + 1) / math.cos(math.pi * 25 / 180)))
             else:
-                state = normalize_side(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
+                state = normalize(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
                         normalize(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
                                       (distance[4] + 1) / math.cos(math.pi * 37 / 180))) + \
-                        normalize_side(
+                        normalize(
                             min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)))
         else:
             if fixed:
-                state = normalize_side(distance[1]) + \
+                state = normalize(distance[1]) + \
                         normalize(distance[3]) + \
-                        normalize_side(distance[5])
+                        normalize(distance[5])
             else:
-                state = normalize_side(distance[1]) + \
+                state = normalize(distance[1]) + \
                         normalize(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
                                       (distance[4] + 1) / math.cos(math.pi * 37 / 180))) + \
-                        normalize_side(distance[5])
+                        normalize(distance[5])
         return state
 
     def wait(self):

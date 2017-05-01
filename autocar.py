@@ -13,8 +13,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     average_step_length = 5
     np.random.seed(1337)
 
-    episode_count = 300
-    max_steps = 30000
+    episode_count = 1200
+    max_steps = 1000
 
     step_average = 0
     step_queue = []
@@ -59,15 +59,15 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             if step_average < 50:
                 Qlearning.parameter_set(0.5, 0.05, 0.7)
             elif step_average < 100:
-                Qlearning.parameter_set(0.45, 0.03, 0.7)
+                Qlearning.parameter_set(0.5, 0.03, 0.7)
             elif step_average < 150:
-                Qlearning.parameter_set(0.4, 0.02, 0.7)
+                Qlearning.parameter_set(0.48, 0.02, 0.7)
             elif step_average < 200:
-                Qlearning.parameter_set(0.35, 0.01, 0.7)
-            elif step_average < 300:
-                Qlearning.parameter_set(0.3, 0.005, 0.7)
+                Qlearning.parameter_set(0.46, 0.01, 0.7)
+            elif step_average < 400:
+                Qlearning.parameter_set(0.44, 0.005, 0.7)
             else:
-                Qlearning.parameter_set(0.25, 0.001, 0.7)
+                Qlearning.parameter_set(0.4, 0.001, 0.7)
 
             state = env.get_respond()
             step = 0
@@ -85,8 +85,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 total_reward += reward
 
-                print("Ep", i, "Step", step, "State", state, "Act", action,
-                      "resp_t:", (int(time.time() * 1000) - time_record))
+                # print("Ep", i, "Step", step, "State", state, "Act", action,
+                #       "resp_t:", (int(time.time() * 1000) - time_record))
+                print("Ep: "+str(i)+"Step: "+str(step)+"State: "+str(state)+"Act: "+str(action))
 
                 if dead:
                     env.set_speed(0, 0)
