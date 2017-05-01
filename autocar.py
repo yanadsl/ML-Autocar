@@ -7,7 +7,7 @@ from qLearning import QL
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
     learning_rate = 0.3
-    greedy = 0.005
+    greedy = 0.05
     decay = 0.7
 
     average_step_length = 5
