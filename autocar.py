@@ -75,7 +75,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             for j in range(max_steps):
                 time_record = int(time.time() * 1000)
 
-                action = Qlearning.action_choose(state)
+                action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
                 time.sleep(0.07)
                 new_state = env.get_respond()

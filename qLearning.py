@@ -22,10 +22,10 @@ class QL:
     def save(self, fname):
         self.table.to_hdf(fname, 'table')
 
-    def action_choose(self, ob):
+    def action_choose(self, ob, train_indicator):
         self.ob_exist(ob)
         l = []
-        if np.random.uniform() > self.greedy:
+        if np.random.uniform() > self.greedy or not train_indicator:
             act = self.table.ix[ob, :]
             for a in act:
                 l.append(round(a, 2))
