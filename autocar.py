@@ -6,7 +6,7 @@ from qLearning import QL
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
-    learning_rate = 0.3
+    learning_rate = 0.4
     greedy = 0.05
     decay = 0.7
 
@@ -77,7 +77,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state)
                 env.step(action)
-                time.sleep(0.08)
+                time.sleep(0.09)
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
                 if train_indicator:
