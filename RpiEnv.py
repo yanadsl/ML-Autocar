@@ -4,12 +4,16 @@ import math
 
 
 def normalize_side(dist):
-    dis = str(math.floor(float(dist) / 2.5))
+    dis = str(int(math.floor(float(dist) / 2.5)))
+    if dis > 18:
+        dis = 18
     return dis
 
 
 def normalize(dist):
-    dis = str(math.floor(float(dist)/4.5))
+    dis = str(int(math.floor(float(dist)/4.5)))
+    if dis > 20:
+        dis = 20
     return dis
 
 
