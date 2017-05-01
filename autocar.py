@@ -13,7 +13,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     average_step_length = 5
     np.random.seed(1337)
 
-    episode_count = 1200
+    episode_count = 120000
     max_steps = 1000
 
     step_average = 0
@@ -90,12 +90,11 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 print("Ep: "+str(i)+"Step: "+str(step)+"State: "+str(state)+"Act: "+str(action))
 
                 if dead:
-                    env.set_speed(0, 0)
                     break
 
                 state = new_state
                 step += 1
-
+            env.set_speed(0, 0)
             step_queue.append(step)
             if len(step_queue) > average_step_length:
                 step_queue.pop(0)

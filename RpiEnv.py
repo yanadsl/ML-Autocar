@@ -34,15 +34,15 @@ def normalize(dist):
         dis += '7'
     elif dist >= 45:
         dis += '6'
-    elif dist >= 35:
+    elif dist >= 33:
         dis += '5'
-    elif dist >= 27:
+    elif dist >= 26:
         dis += '4'
-    elif dist >= 22.5:
+    elif dist >= 20:
         dis += '3'
-    elif dist >= 18:
+    elif dist >= 15:
         dis += '2'
-    elif dist >= 13.5:
+    elif dist >= 10:
         dis += '1'
     else:
         dis += '0'
