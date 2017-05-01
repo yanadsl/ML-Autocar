@@ -77,7 +77,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state)
                 env.step(action)
-                time.sleep(0.1)
+                time.sleep(0.08)
                 new_state = env.get_respond()
                 reward, dead = env.get_reward()
                 if train_indicator:
