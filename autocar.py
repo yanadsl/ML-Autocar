@@ -16,7 +16,6 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     episode_count = 120000
     max_steps = 1000
 
-    step_average = 0
     step_queue = []
     # initialize pigpiod and set at which distance is dead
     env = Env()
@@ -44,7 +43,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     except:
         best_step = 0
         print("best_step: Error")
-
+    # load step average of last time
     try:
         file = open('step_average.txt', 'r')
         step_average = int(file.read())
@@ -78,7 +77,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             else:
                 Qlearning.parameter_set(0.4, 0.001, 0.7)
 
-            state = env.get_respond()
+            receive_data = env.get_respond()
+            state = env.process_data(receive_data)
             step = 0
             total_reward = 0
             for j in range(max_steps):
@@ -87,13 +87,15 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
                 time.sleep(0.07)
-                new_state = env.get_respond()
+                receive_data = env.get_respond()
+                new_state = env.process_data(receive_data)
                 reward, dead = env.get_reward()
                 if train_indicator:
                     Qlearning.learn(state, action, reward, new_state)
 
                 total_reward += reward
 
+                # if you are concern about how fast does Rpi run , use line 101
                 # print("Ep", i, "Step", step, "State", state, "Act", action,
                 #       "resp_t:", (int(time.time() * 1000) - time_record))
                 print("Ep: "+str(i)+"Step: "+str(step)+"State: "+str(state)+"Act: "+str(action))
@@ -116,6 +118,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             if train_indicator:
                 print("Now we save model")
                 Qlearning.save("Qtable.h5")
+                # save some record
                 if step > best_step:
                     file = open('best_step.txt', 'w')
                     file.write(str(step))
@@ -128,8 +131,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 file.close()
 
             print("")
-            env.wait()
+            env.wait()  # wait till get a button clicked
             time.sleep(0.7)
+
         env.end()  # Stop Servos
         print("Finish.")
 

@@ -3,29 +3,6 @@ import pigpio
 import math
 
 
-def normalize_side(dist):
-    dis = ''
-    if dist >= 45:
-        dis += '8'
-    elif dist >= 30:
-        dis += '7'
-    elif dist >= 25:
-        dis += '6'
-    elif dist >= 20:
-        dis += '5'
-    elif dist >= 15:
-        dis += '4'
-    elif dist >= 12.5:
-        dis += '3'
-    elif dist >= 10:
-        dis += '2'
-    elif dist >= 7.5:
-        dis += '1'
-    else:
-        dis += '0'
-    return dis
-
-
 def normalize(dist):
     dis = ''
     if dist >= 81:
@@ -66,7 +43,6 @@ class Env:
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
         self.h1 = self.pi.serial_open("/dev/ttyAMA0", 9600)
 
-
     def step(self, action):
         if action == 'left':
             self.set_speed(15, 100)
@@ -88,7 +64,7 @@ class Env:
         (b, d) = self.pi.serial_read(self.h1, self.sensor_message_size)
         self.pi.write(self.sensor_signal_pin, pigpio.LOW)
 
-        return self.process_data(d)
+        return d
 
     def get_reward(self):
         # 0 means die
@@ -110,6 +86,7 @@ class Env:
         # transform byte array to int
         for a in data:
             distance.append(int(a) / 2.0)
+
         if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
                         abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
             if distance[2] < 40:
@@ -123,6 +100,7 @@ class Env:
             ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
             distance[3] = round(ans, 1)
             fixed = True
+
         if distance[3] > 60:
             if fixed:
                 state = normalize(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
@@ -148,8 +126,34 @@ class Env:
         return state
 
     def wait(self):
-        while not self.pi.read(self.next_signal_pin):
-            time.sleep(0.001)
+        try:
+            while not self.pi.read(self.next_signal_pin):
+                time.sleep(0.001)
+        except:
+            self.end()
+            print("STOP")
+
+    def test(self, receive_data):
+        distance = [int(each) / 2 for each in receive_data]
+        print(distance)
+        state = self.process_data(receive_data)
+
+        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
+                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
+            if distance[2] < 40:
+                a = distance[1] + 0.5
+                b = distance[2]
+            else:
+                a = distance[5] + 0.5
+                b = distance[4]
+            c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
+            sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
+            print('FIXXXXXXXXXXXXXXXXX', round(math.degrees(sita), 1))
+
+        if self.pi.read(self.dead_pin) == pigpio.LOW:
+            print('DEAD   ' + 'state:' + state)
+        else:
+            print('Alive  ' + 'state:' + state)
 
 
     def end(self):
