@@ -11,6 +11,7 @@ class qlearning_lambda(QL):
         self.Lambda = Lambda
 
     def learn(self, state, action, reward, next_state, done=False):
+        self.ob_exist(state)
         self.ob_exist(next_state)
         self.backtrace_exist(next_state)
         q_guess = self.table.ix[state, action]

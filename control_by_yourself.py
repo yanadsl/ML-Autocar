@@ -17,7 +17,7 @@ def read_input(threadname):
         tty.setcbreak(sys.stdin.fileno())
 
         i = 0
-        while stop:
+        while not stop:
             if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
                 key = sys.stdin.read(1)
                 print(key)

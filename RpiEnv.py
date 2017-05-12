@@ -87,42 +87,32 @@ class Env:
         for a in data:
             distance.append(int(a) / 2.0)
 
-        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
-                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
-            if distance[2] < 40:
-                a = distance[1] + 0.5
+        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 50) or (
+                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 50):
+            if distance[2] < 50:
+                a = distance[1]
                 b = distance[2]
             else:
-                a = distance[5] + 0.5
+                a = distance[5]
                 b = distance[4]
-            c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
-            sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
-            ans = a * math.sin(math.pi - sita) / math.sin(sita - math.pi * 25 / 180)
+            c = math.sqrt((a+8) ** 2 + (b+8) ** 2 - 2 * (a+8) * (b+8) * math.cos(math.pi * 30 / 180))
+            sita = math.acos(((b+8) ** 2 + c ** 2 - (a+8) ** 2) / (2 * (b+8) * c))
+            ans = ((b+8) * math.sin(math.pi - sita) / math.sin(sita - math.pi * 30 / 180)) - 8
             distance[3] = round(ans, 1)
             fixed = True
 
-        if distance[3] > 60:
-            if fixed:
-                state = normalize(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
-                        normalize(distance[3]) + \
-                        normalize(
-                            min(distance[5], (distance[6] + 1) / math.cos(math.pi * 25 / 180)))
-            else:
-                state = normalize(min(distance[0] / math.cos(math.pi * 25 / 180), distance[1])) + \
-                        normalize(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
-                                      (distance[4] + 1) / math.cos(math.pi * 37 / 180))) + \
-                        normalize(
-                            min(distance[5], (distance[6] + 1) * math.cos(math.pi * 25 / 180)))
+        if fixed:
+            state = normalize(min(((distance[1] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[0])) + \
+                    normalize(distance[3]) + \
+                    normalize(
+                        min(distance[6], ((distance[5] + 8) / math.cos(math.pi * 30 / 180)) - 8))
         else:
-            if fixed:
-                state = normalize(distance[1]) + \
-                        normalize(distance[3]) + \
-                        normalize(distance[5])
-            else:
-                state = normalize(distance[1]) + \
-                        normalize(min((distance[2] + 1) / math.cos(math.pi * 37 / 180), distance[3],
-                                      (distance[4] + 1) / math.cos(math.pi * 37 / 180))) + \
-                        normalize(distance[5])
+            state = normalize(min(((distance[1] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[0])) + \
+                    normalize(min(((distance[2] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[3],
+                                  ((distance[4] + 8) / math.cos(math.pi * 30 / 180)) - 8)) + \
+                    normalize(
+                        min(distance[6], ((distance[5] + 8) / math.cos(math.pi * 30 / 180)) - 8))
+
         return state
 
     def wait(self):
