@@ -23,12 +23,14 @@ l = np.array([[i*0 for i in range(7)]], np.int8)
 for a in s:
     if a.isnumeric():
         l[0][int(a)-1] = 1
+print('shape of x',str(distance.shape))
+print('shape of y',str(l.shape))
 if yeah:
-    x_train = np.concatenate((x_train,distance))
-    y_train = np.concatenate((y_train,l))
+    x_train = np.concatenate((x_train, distance))
+    y_train = np.concatenate((y_train, l))
 else:
-    x_train = np.concatenate((distance))
-    y_train = np.concatenate((l))
+    x_train = distance
+    y_train = l
 
 while True:
     input('準備讀取超音波 (請按Enter)')
@@ -36,15 +38,20 @@ while True:
     distance = []
     for a in data:
         distance.append(int(a) / 2.0)
+    print(distance)
     distance = np.array([distance], np.float32)
 
     s = input('輸入正確答案:')
+    if str(s) == 'n':
+        continue
     if str(s) == 'q' or str(s) == 'quit':
         break
     l = np.array([[i * 0 for i in range(7)]], np.int8)
     for a in s:
         if a.isnumeric():
             l[0][int(a) - 1] = 1
+    print('shape of x', str(x_train.shape))
+    print('shape of y', str(y_train.shape))
     x_train = np.concatenate((x_train, distance))
     np.savetxt('x_train.txt', x_train, fmt='%d')
     y_train = np.concatenate((y_train, l))
