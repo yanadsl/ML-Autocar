@@ -23,8 +23,6 @@ l = np.array([[i*0 for i in range(7)]], np.int8)
 for a in s:
     if a.isnumeric():
         l[0][int(a)-1] = 1
-print('shape of x',str(distance.shape))
-print('shape of y',str(l.shape))
 if yeah:
     x_train = np.concatenate((x_train, distance))
     y_train = np.concatenate((y_train, l))
@@ -50,8 +48,6 @@ while True:
     for a in s:
         if a.isnumeric():
             l[0][int(a) - 1] = 1
-    print('shape of x', str(x_train.shape))
-    print('shape of y', str(y_train.shape))
     x_train = np.concatenate((x_train, distance))
     np.savetxt('x_train.txt', x_train, fmt='%d')
     y_train = np.concatenate((y_train, l))
