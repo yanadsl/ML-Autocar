@@ -79,7 +79,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         print("step_average:" + str(step_average))
     except:
         step_average = 0
-        print ("step_average: Error")
+        print("step_average: Error")
 
     print("Autocar Experiment Start.")
 
@@ -96,6 +96,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             state = env.process_data(receive_data)
             step = 0
             total_reward = 0
+            time.sleep(1.5)  # prevent from restart instantly
+            print('Press button to start')
             while key == 0:
                 pass
             for j in range(max_steps):
@@ -107,7 +109,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                     action = 'go'
                 elif str(key) == 'd':
                     action = 'right'
-                elif str(key) == 's':
+                elif str(key) == 's' or str(key) == 'r':
                     break
 
                 env.step(action)
@@ -132,6 +134,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 state = new_state
                 step += 1
             env.set_speed(0, 0)
+            if str(key) == 's':
+                break
+            Qlearning.backtrace_reset()
             key = 0
 
             step_queue.append(step)

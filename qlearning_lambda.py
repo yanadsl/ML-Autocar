@@ -1,6 +1,7 @@
 from qLearning import QL
 import pandas as pd
 
+
 class qlearning_lambda(QL):
 
     def __init__(self, actions, learning_rate, greedy, decay, Lambda):
@@ -11,6 +12,7 @@ class qlearning_lambda(QL):
 
     def learn(self, state, action, reward, next_state, done=False):
         self.ob_exist(next_state)
+        self.backtrace_exist(next_state)
         q_guess = self.table.ix[state, action]
         if done:
             q = reward
@@ -39,3 +41,15 @@ class qlearning_lambda(QL):
             self.table = self.table.append(new)
             self.backtrace = self.backtrace.append(new)
 
+    def backtrace_exist(self, state):
+        if state not in self.backtrace.index:
+            new = pd.Series(
+                    [0] * len(self.actions),
+                    index=self.backtrace.columns,
+                    name=state,
+            )
+            self.backtrace = self.backtrace.append(new)
+
+    def backtrace_reset(self):
+        for act in self.actions:
+            self.backtrace[act] = 0
