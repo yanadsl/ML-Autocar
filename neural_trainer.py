@@ -1,6 +1,10 @@
 import RpiEnv
 import numpy as np
+import sys
+from keras.models import load_model
 
+model = load_model('my_model.h5')
+np.set_printoptions(precision=2)
 yeah = False
 env = RpiEnv.Env()
 y_train = np.array([])
@@ -18,6 +22,8 @@ for a in data:
     distance.append(int(a) / 2.0)
 print(distance)
 distance = np.array([distance], np.float32)
+print('預測')
+print(model.predict(distance))
 s = input('輸入正確答案:')
 l = np.array([[i*0 for i in range(7)]], np.int8)
 for a in s:
@@ -29,8 +35,10 @@ if yeah:
 else:
     x_train = distance
     y_train = l
-
+w = 1
 while True:
+    w += 1
+    print('第' + str(w) + '次')
     input('準備讀取超音波 (請按Enter)')
     data = env.get_respond()
     distance = []
@@ -38,12 +46,15 @@ while True:
         distance.append(int(a) / 2.0)
     print(distance)
     distance = np.array([distance], np.float32)
+    print('預測')
+    print(model.predict(distance))
 
     s = input('輸入正確答案:')
     if str(s) == 'n':
+        w -= 1
         continue
     if str(s) == 'q' or str(s) == 'quit':
-        break
+        sys.exit(0)
     l = np.array([[i * 0 for i in range(7)]], np.int8)
     for a in s:
         if a.isnumeric():
