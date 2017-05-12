@@ -48,6 +48,12 @@ class QL:
             q = reward + self.decay * self.table.ix[next_state, a]  # SARSA
         self.table.ix[state, a] += self.learning_rate * (q - q_guess)
 
+    def SARSA_learn(self, state, a, reward, next_state, next_action):
+        q_guess = self.table.ix[state, a]
+        q = reward + self.decay * self.table.ix[next_state, next_action]  # SARSA
+        self.table.ix[state, a] += self.learning_rate * (q - q_guess)
+
+
     def ob_exist(self, state):
         if state not in self.table.index:
             self.table = self.table.append(

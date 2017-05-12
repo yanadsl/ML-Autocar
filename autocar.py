@@ -2,14 +2,14 @@ import time
 from RpiEnv import Env
 import numpy as np
 from qLearning import QL
-
+from qlearning_lambda import qlearning_lambda
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     actions = ['left', 'go', 'right']
     learning_rate = 0.4
     greedy = 0.05
     decay = 0.7
-
+    Lambda = 0.8
     average_step_length = 5
     np.random.seed(1337)
 
@@ -20,7 +20,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     # initialize pigpiod and set at which distance is dead
     env = Env()
 
-    Qlearning = QL(actions, decay, greedy, learning_rate)
+    #Qlearning = QL(actions, decay, greedy, learning_rate)
+    Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
 
     # load weight
     Qlearning.load("Qtable.h5")
@@ -86,6 +87,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
+                # you should give a small latency to make sure your action do work without being skipped
                 time.sleep(0.07)
                 receive_data = env.get_respond()
                 new_state = env.process_data(receive_data)
@@ -139,7 +141,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
     except KeyboardInterrupt:
         env.end()
-        ask = raw_input("save model?(y/n):")
+        ask = str(input("save model?(y/n):"))
         if ask == 'y':
             print("Now we save model")
             Qlearning.save("Qtable.h5")
