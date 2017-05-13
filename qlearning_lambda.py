@@ -31,6 +31,15 @@ class qlearning_lambda(QL):
 
         self.backtrace *= self.decay * self.Lambda
 
+    def load(self, fname):
+        try:
+            self.table = pd.read_hdf(fname, 'table')
+            self.backtrace = self.table.copy()
+            self.back_reset()
+            print("load successfully")
+        except:
+            print("no file to load")
+
     def ob_exist(self, state):
         if state not in self.table.index:
             new = pd.Series(

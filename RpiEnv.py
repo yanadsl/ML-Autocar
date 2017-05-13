@@ -45,11 +45,11 @@ class Env:
 
     def step(self, action):
         if action == 'left':
-            self.set_speed(15, 100)
+            self.set_speed(0, 100)
         elif action == 'go':
-            self.set_speed(75, 85)
+            self.set_speed(97, 100)
         else:
-            self.set_speed(100, 15)
+            self.set_speed(97, 0)
 
     def get_respond(self):  # FPGA sends data once when the signal_pin is high
         # delay at least 50ms to get right value of sonic sensor
