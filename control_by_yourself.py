@@ -36,7 +36,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     learning_rate = 0.4
     greedy = 0.05
     decay = 0.7
-    Lambda = 0.8
+    Lambda = 0.5
     average_step_length = 5
     np.random.seed(1337)
 
