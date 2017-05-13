@@ -5,19 +5,19 @@ import math
 
 def normalize(dist):
     dis = ''
-    if dist >= 81:
+    if dist >= 68:
         dis += '8'
-    elif dist >= 54:
+    elif dist >= 49:
         dis += '7'
-    elif dist >= 45:
+    elif dist >= 32:
         dis += '6'
-    elif dist >= 33:
+    elif dist >= 22:
         dis += '5'
-    elif dist >= 26:
+    elif dist >= 19:
         dis += '4'
-    elif dist >= 20:
+    elif dist >= 16:
         dis += '3'
-    elif dist >= 15:
+    elif dist >= 13:
         dis += '2'
     elif dist >= 10:
         dis += '1'
@@ -36,7 +36,6 @@ class Env:
     time_record = int(time.time() * 1000)
     time_limit = 20
     sensor_unusable_diff = 6
-    dis = []
 
     def __init__(self):
         self.pi = pigpio.pi()
@@ -72,10 +71,8 @@ class Env:
         reward = 10
         dead = False
         if self.pi.read(self.dead_pin) == pigpio.LOW:
-            if self.dis[0] <= 4.5 or self.dis[1] <= 7 or self.dis[2] <= 7 or self.dis[3] <= 15 or \
-                            self.dis[4] <= 7 or self.dis[5] <= 7 or self.dis[6] <= 4.5:
-                reward = -1000
-                dead = True
+            reward = -1000
+            dead = True
         return reward, dead
 
     def set_speed(self, lspeed=0, rspeed=0):
@@ -86,7 +83,6 @@ class Env:
         fixed = False
         # transform byte array to int
         distance = [int(each) / 2 for each in data]
-        self.dis = distance
         if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 50) or (
                         abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 50):
             if distance[2] < 50:
