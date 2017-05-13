@@ -35,7 +35,7 @@ class qlearning_lambda(QL):
         try:
             self.table = pd.read_hdf(fname, 'table')
             self.backtrace = self.table.copy()
-            self.back_reset()
+            self.backtrace_reset()
             print("load successfully")
         except:
             print("no file to load")
