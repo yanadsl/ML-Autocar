@@ -95,9 +95,9 @@ class Env:
             else:
                 a = distance[5]
                 b = distance[4]
-            c = math.sqrt((a+8) ** 2 + (b+8) ** 2 - 2 * (a+8) * (b+8) * math.cos(math.pi * 30 / 180))
-            sita = math.acos(((b+8) ** 2 + c ** 2 - (a+8) ** 2) / (2 * (b+8) * c))
-            ans = ((b+8) * math.sin(math.pi - sita) / math.sin(sita - math.pi * 30 / 180)) - 8
+            c = math.sqrt((a + 8) ** 2 + (b + 8) ** 2 - 2 * (a + 8) * (b + 8) * math.cos(math.pi * 30 / 180))
+            sita = math.acos(((b + 8) ** 2 + c ** 2 - (a + 8) ** 2) / (2 * (b + 8) * c))
+            ans = ((b + 8) * math.sin(math.pi - sita) / math.sin(sita - math.pi * 30 / 180)) - 8
             distance[3] = round(ans, 1)
             fixed = True
 
@@ -126,25 +126,38 @@ class Env:
     def test(self, receive_data):
         distance = [int(each) / 2 for each in receive_data]
         print(distance)
-        state = self.process_data(receive_data)
-
-        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 40) or (
-                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 40):
-            if distance[2] < 40:
-                a = distance[1] + 0.5
+        fixed = False
+        # transform byte array to int
+        if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 50) or (
+                        abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 50):
+            if distance[2] < 50:
+                a = distance[1]
                 b = distance[2]
             else:
-                a = distance[5] + 0.5
+                a = distance[5]
                 b = distance[4]
-            c = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.pi * 25 / 180))
-            sita = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
-            print('FIXXXXXXXXXXXXXXXXX', round(math.degrees(sita), 1))
+            c = math.sqrt((a + 8) ** 2 + (b + 8) ** 2 - 2 * (a + 8) * (b + 8) * math.cos(math.pi * 30 / 180))
+            sita = math.acos(((b + 8) ** 2 + c ** 2 - (a + 8) ** 2) / (2 * (b + 8) * c))
+            ans = ((b + 8) * math.sin(math.pi - sita) / math.sin(sita - math.pi * 30 / 180)) - 8
+            distance[3] = round(ans, 1)
+            fixed = True
+
+        if fixed:
+            state = normalize(min(((distance[1] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[0])) + \
+                    normalize(distance[3]) + \
+                    normalize(
+                        min(distance[6], ((distance[5] + 8) / math.cos(math.pi * 30 / 180)) - 8))
+        else:
+            state = normalize(min(((distance[1] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[0])) + \
+                    normalize(min(((distance[2] + 8) / math.cos(math.pi * 30 / 180)) - 8, distance[3],
+                                  ((distance[4] + 8) / math.cos(math.pi * 30 / 180)) - 8)) + \
+                    normalize(
+                        min(distance[6], ((distance[5] + 8) / math.cos(math.pi * 30 / 180)) - 8))
 
         if self.pi.read(self.dead_pin) == pigpio.LOW:
             print('DEAD   ' + 'state:' + state)
         else:
             print('Alive  ' + 'state:' + state)
-
 
     def end(self):
         self.set_speed(0, 0)
