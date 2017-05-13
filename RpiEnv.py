@@ -36,6 +36,7 @@ class Env:
     time_record = int(time.time() * 1000)
     time_limit = 20
     sensor_unusable_diff = 6
+    dis = []
 
     def __init__(self):
         self.pi = pigpio.pi()
@@ -68,12 +69,13 @@ class Env:
 
     def get_reward(self):
         # 0 means die
+        reward = 10
+        dead = False
         if self.pi.read(self.dead_pin) == pigpio.LOW:
-            reward = -1000
-            dead = True
-        else:
-            reward = 20
-            dead = False
+            if self.dis[0] <= 4.5 or self.dis[1] <= 7 or self.dis[2] <= 7 or self.dis[3] <= 15 or \
+                            self.dis[4] <= 7 or self.dis[5] <= 7 or self.dis[6] <= 4.5:
+                reward = -1000
+                dead = True
         return reward, dead
 
     def set_speed(self, lspeed=0, rspeed=0):
@@ -81,12 +83,10 @@ class Env:
         self.pi.hardware_PWM(self.right_servo_pin, 800, int(rspeed) * 10000)
 
     def process_data(self, data):  # some algorithms to correct the sensors
-        distance = []
         fixed = False
         # transform byte array to int
-        for a in data:
-            distance.append(int(a) / 2.0)
-
+        distance = [int(each) / 2 for each in data]
+        self.dis = distance
         if (abs(distance[2] - distance[1]) < self.sensor_unusable_diff and distance[2] < 50) or (
                         abs(distance[4] - distance[5]) < self.sensor_unusable_diff and distance[4] < 50):
             if distance[2] < 50:

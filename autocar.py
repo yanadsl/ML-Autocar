@@ -88,7 +88,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 action = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
-                time.sleep(0.035)
+                time.sleep(0.025)
                 receive_data = env.get_respond()
                 new_state = env.process_data(receive_data)
                 reward, dead = env.get_reward()
