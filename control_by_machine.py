@@ -99,6 +99,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             env.wait()
             time.sleep(1)  # prevent from restart instantly
             for j in range(max_steps):
+                if str(key) == 's':
+                    break
 
                 if int(state[0]) - int(state[2]) > 1:
                     action = 'left'
