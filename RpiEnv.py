@@ -66,7 +66,7 @@ class Env:
 
     def get_reward(self):
         # 0 means die
-        reward = 10
+        reward = 20
         dead = False
         if self.pi.read(self.dead_pin) == pigpio.LOW:
             reward = -1000
