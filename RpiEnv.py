@@ -71,7 +71,7 @@ class Env:
 
     def get_respond(self):  # FPGA sends data once when the signal_pin is high
         # delay at least 50ms to get right value of sonic sensor
-        while (int(time.time() * 1000) - self.time_record) <= self.time_limit +1:
+        while (int(time.time() * 1000) - self.time_record) <= self.time_limit + 1:
             pass
         self.time_record = int(time.time() * 1000)
 
@@ -187,4 +187,21 @@ class Env:
             state = '1'
         else:
             state = '2'
+        return state
+
+    def process_data_by_distance(self, data, distance_difference, state_number):
+        distance = [int(each) / 2 for each in data]
+        c = min(distance[0:3])
+        d = min(distance[4:7])
+        state = '0'
+        change = False
+        for i in range(state_number):
+            if c - d > distance_difference * (i+1):
+                change = True
+                state = str(i * 2 + 1)
+            elif d - c > distance_difference * (i+1):
+                change = True
+                state = str(i * 2 + 2)  # avoid i=0 you cant reach 2
+        if not change:
+            state = '0'
         return state

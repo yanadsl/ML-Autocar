@@ -5,6 +5,8 @@ from qLearning import QL
 from qlearning_lambda import qlearning_lambda
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
+    distance_difference = 10
+    state_number = 1
     actions = ['left', 'go', 'right']
     learning_rate = 0.4
     greedy = 0.05
@@ -80,6 +82,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
             receive_data = env.get_respond()
             state = env.bullshit_process_data(receive_data)
+            #state = env.process_data_by_distance(receive_data, distance_difference, state_number)
             step = 0
             total_reward = 0
             for j in range(max_steps):
@@ -90,6 +93,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 # you should give a small latency to make sure your action do work without being skipped
                 receive_data = env.get_respond()
                 new_state = env.bullshit_process_data(receive_data)
+                #new_state = env.process_data_by_distance(receive_data, distance_difference, state_number)
                 reward, dead = env.get_reward()
                 if train_indicator:
                     Qlearning.learn(state, action, reward, new_state)
