@@ -3,21 +3,41 @@ import pigpio
 import math
 
 
+def normalize_front(dist):
+    dis = ''
+    if dist >= 49:
+        dis += '7'
+    elif dist >= 32:
+        dis += '6'
+    elif dist >= 27:
+        dis += '5'
+    elif dist >= 23:
+        dis += '4'
+    elif dist >= 19:
+        dis += '3'
+    elif dist >= 16:
+        dis += '2'
+    elif dist >= 13:
+        dis += '1'
+    else:
+        dis += '0'
+    return dis
+
 def normalize(dist):
     dis = ''
     if dist >= 50:
         dis += '7'
     elif dist >= 40:
         dis += '6'
-    elif dist >= 30:
+    elif dist >= 33:
         dis += '5'
-    elif dist >= 25:
+    elif dist >= 28:
         dis += '4'
-    elif dist >= 20:
+    elif dist >= 23:
         dis += '3'
-    elif dist >= 15:
+    elif dist >= 18:
         dis += '2'
-    elif dist >= 10:
+    elif dist >= 13:
         dis += '1'
     else:
         dis += '0'
