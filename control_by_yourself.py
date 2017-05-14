@@ -171,7 +171,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     except KeyboardInterrupt:
         stop = True
         env.end()
-        ask = str(input("save model?(y/n):"))
+        ask = raw_input("save model?(y/n):")
         if ask == 'y':
             print("Now we save model")
             Qlearning.save("Qtable.h5")

@@ -133,6 +133,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 file.close()
 
             print("")
+            time.sleep(0.7)
             env.wait()  # wait till get a button clicked
             time.sleep(0.7)
 
