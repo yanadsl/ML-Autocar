@@ -71,8 +71,8 @@ class Env:
 
     def get_respond(self):  # FPGA sends data once when the signal_pin is high
         # delay at least 50ms to get right value of sonic sensor
-        while (int(time.time() * 1000) - self.time_record) <= self.time_limit:
-            time.sleep(0.002)
+        while (int(time.time() * 1000) - self.time_record) <= self.time_limit +1:
+            pass
         self.time_record = int(time.time() * 1000)
 
         self.pi.serial_read(self.h1)  # clear any redauntancy data

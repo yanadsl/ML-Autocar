@@ -103,16 +103,16 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 if str(key) == 's':
                     break
 
-                if int(state[0]) - int(state[2]) > 1:
+                distance = [int(each) / 2 for each in receive_data]
+                c = min(distance[0:3])
+                d = min(distance[4:7])
+                if c - d > 10:
                     action = 'left'
-                elif int(state[2]) - int(state[0]) > 1:
+                elif d - c > 10:
                     action = 'right'
                 else:
                     action = 'go'
-
                 env.step(action)
-                # you should give a small latency to make sure your action do work without being skipped
-                time.sleep(0.05)
                 receive_data = env.get_respond()
                 new_state = env.process_data(receive_data)
                 reward, dead = env.get_reward()
