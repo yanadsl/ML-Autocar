@@ -92,12 +92,13 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             file.write(str(i))
             file.close()
 
-            receive_data = env.get_respond()
-            state = env.process_data(receive_data)
+
             step = 0
             total_reward = 0
             env.wait()
             time.sleep(1)  # prevent from restart instantly
+            receive_data = env.get_respond()
+            state = env.process_data(receive_data)
             for j in range(max_steps):
                 if str(key) == 's':
                     break
@@ -111,7 +112,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
-                time.sleep(0.2)
+                time.sleep(0.05)
                 receive_data = env.get_respond()
                 new_state = env.process_data(receive_data)
                 reward, dead = env.get_reward()

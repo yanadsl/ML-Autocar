@@ -14,6 +14,6 @@ try:
             env.step('right')
         else:
             env.step('go')
-        time.sleep(0.2)
+        time.sleep(0.05)
 except:
     env.end()
