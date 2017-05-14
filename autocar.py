@@ -14,14 +14,14 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     np.random.seed(1337)
 
     episode_count = 120000
-    max_steps = 1000
+    max_steps = 1500
 
     step_queue = []
     # initialize pigpiod and set at which distance is dead
     env = Env()
 
-    #Qlearning = QL(actions, decay, greedy, learning_rate)
-    Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
+    Qlearning = QL(actions, decay, greedy, learning_rate)
+    #Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
 
     # load weight
     Qlearning.load("Qtable.h5")
@@ -100,7 +100,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 # if you are concern about how fast does Rpi run , use line 101
                 # print("Ep", i, "Step", step, "State", state, "Act", action,
                 #       "resp_t:", (int(time.time() * 1000) - time_record))
-                print("Ep: "+str(i)+"Step: "+str(step)+"State: "+str(state)+"Act: "+str(action))
+                print("Ep: "+str(i)+", Step: "+str(step)+", State: "+str(state)+", Act: "+str(action))
 
                 if dead:
                     break
@@ -141,7 +141,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
     except KeyboardInterrupt:
         env.end()
-        ask = str(input("save model?(y/n):"))
+        ask = raw_input("save model?(y/n):")
         if ask == 'y':
             print("Now we save model")
             Qlearning.save("Qtable.h5")

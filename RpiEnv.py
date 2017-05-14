@@ -5,19 +5,17 @@ import math
 
 def normalize(dist):
     dis = ''
-    if dist >= 68:
-        dis += '8'
-    elif dist >= 49:
+    if dist >= 50:
         dis += '7'
-    elif dist >= 32:
+    elif dist >= 40:
         dis += '6'
-    elif dist >= 22:
+    elif dist >= 30:
         dis += '5'
-    elif dist >= 19:
+    elif dist >= 25:
         dis += '4'
-    elif dist >= 16:
+    elif dist >= 20:
         dis += '3'
-    elif dist >= 13:
+    elif dist >= 15:
         dis += '2'
     elif dist >= 10:
         dis += '1'
