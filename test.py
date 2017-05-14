@@ -9,7 +9,6 @@ def set_speed(lspeed, rspeed):
 
 
 pi = pigpio.pi()
-h1 = pi.serial_open("/dev/ttyAMA0", 9600)
 left_servo_pin = 13
 right_servo_pin = 12
 dead_pin = 17
@@ -17,16 +16,13 @@ die_distance = 8
 ls = 100
 rs = 100
 print("start")
-pi.serial_write_byte(h1, die_distance * 2)
 
 try:
     while True:
         set_speed(ls, rs)
         if pi.read(dead_pin) == pigpio.LOW:
             set_speed(0, 0)
-            pi.serial_close(h1)
 
 except :
     set_speed(0, 0)
-    pi.serial_close(h1)
     sys.exit(0)

@@ -114,7 +114,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
-                time.sleep(0.05)
+                time.sleep(0.2)
                 receive_data = env.get_respond()
                 new_state = env.process_data(receive_data)
                 reward, dead = env.get_reward()
@@ -136,7 +136,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             env.set_speed(0, 0)
             if str(key) == 's':
                 break
-            Qlearning.backtrace_reset()
+            #Qlearning.backtrace_reset()
             key = 0
 
             step_queue.append(step)
