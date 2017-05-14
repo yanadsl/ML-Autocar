@@ -176,3 +176,15 @@ class Env:
     def end(self):
         self.set_speed(0, 0)
         self.pi.serial_close(self.h1)
+
+    def bullshit_process_data(self, data):
+        distance = [int(each) / 2 for each in data]
+        c = min(distance[0:3])
+        d = min(distance[4:7])
+        if c - d > 10:
+            state = '0'
+        elif d - c > 10:
+            state = '1'
+        else:
+            state = '2'
+        return state

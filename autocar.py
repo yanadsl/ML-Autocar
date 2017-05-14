@@ -79,7 +79,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 Qlearning.parameter_set(0.08, 0.001, 0.7)
 
             receive_data = env.get_respond()
-            state = env.process_data(receive_data)
+            state = env.bullshit_process_data(receive_data)
             step = 0
             total_reward = 0
             for j in range(max_steps):
@@ -89,7 +89,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
                 receive_data = env.get_respond()
-                new_state = env.process_data(receive_data)
+                new_state = env.bullshit_process_data(receive_data)
                 reward, dead = env.get_reward()
                 if train_indicator:
                     Qlearning.learn(state, action, reward, new_state)
