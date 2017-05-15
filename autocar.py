@@ -6,9 +6,9 @@ from qlearning_lambda import qlearning_lambda
 
 
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
-    distance_difference_min = 10
+    distance_difference_min = 5
     distance_difference_max = 10
-    spacing = 2
+    spacing = 1
     actions = ['left', 'go', 'right']
     learning_rate = 0.4
     greedy = 0.05
@@ -26,6 +26,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
 
     Qlearning = QL(actions, decay, greedy, learning_rate)
     # Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
+
+    random = False
+    new_state = ''
 
     # load weight
     Qlearning.load("Qtable.h5")
@@ -89,8 +92,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             total_reward = 0
             for j in range(max_steps):
                 time_record = int(time.time() * 1000)
-
-                action = Qlearning.action_choose(state, train_indicator)
+                if not (random and new_state == state):
+                    action, random = Qlearning.action_choose(state, train_indicator)
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
                 receive_data = env.get_respond()

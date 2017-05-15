@@ -26,6 +26,7 @@ class QL:
         self.ob_exist(ob)
         l = []
         if np.random.uniform() > self.greedy or not train_indicator:
+            random = False
             act = self.table.ix[ob, :]
             for a in act:
                 l.append(round(a, 2))
@@ -34,9 +35,10 @@ class QL:
             act = act.argmax()
         else:
             act = np.random.choice(self.actions)
+            random = True
             print("")
             print("random")
-        return act
+        return act, random
 
     def learn(self, state, a, reward, next_state, done=False):
         self.ob_exist(next_state)

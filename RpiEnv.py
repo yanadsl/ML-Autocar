@@ -3,26 +3,6 @@ import pigpio
 import math
 
 
-# def normalize_front(dist):
-#     dis = ''
-#     if dist >= 49:
-#         dis += '7'
-#     elif dist >= 32:
-#         dis += '6'
-#     elif dist >= 27:
-#         dis += '5'
-#     elif dist >= 23:
-#         dis += '4'
-#     elif dist >= 19:
-#         dis += '3'
-#     elif dist >= 16:
-#         dis += '2'
-#     elif dist >= 13:
-#         dis += '1'
-#     else:
-#         dis += '0'
-#     return dis
-
 def normalize(dist):
     dis = ''
     if dist >= 50:
@@ -65,7 +45,7 @@ class Env:
         if action == 'left':
             self.set_speed(0, 100)
         elif action == 'go':
-            self.set_speed(97, 100)
+            self.set_speed(80, 80)
         else:
             self.set_speed(97, 0)
 
@@ -92,6 +72,8 @@ class Env:
         dead = False
         if self.pi.read(self.dead_pin) == pigpio.LOW:
             reward = -1000
+            if action == 'go':
+                reward = -10000
             dead = True
         return reward, dead
 
