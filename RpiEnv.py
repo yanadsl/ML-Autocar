@@ -189,19 +189,21 @@ class Env:
             state = '2'
         return state
 
-    def process_data_by_distance(self, data, distance_difference, state_number):
+    def process_data_by_distance(self, data, distance_difference_min, distance_difference_max, spacing):
         distance = [int(each) / 2 for each in data]
         c = min(distance[0:3])
         d = min(distance[4:7])
         state = '0'
-        change = False
-        for i in range(state_number):
-            if c - d > distance_difference * (i+1):
-                change = True
-                state = str(i * 2 + 1)
-            elif d - c > distance_difference * (i+1):
-                change = True
-                state = str(i * 2 + 2)  # avoid i=0 you cant reach 2
-        if not change:
+
+        if abs(c-d) < distance_difference_min:
             state = '0'
+        i = 0
+        while distance_difference_min <= distance_difference_max:
+            if c - d > distance_difference_min * (i+1):
+                state = str(i * 2 + 1)
+            elif d - c > distance_difference_min * (i+1):
+                state = str(i * 2 + 2)  # avoid i=0 you cant reach 2
+            distance_difference_min += spacing
+            i += 1
+
         return state

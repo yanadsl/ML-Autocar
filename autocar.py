@@ -4,9 +4,11 @@ import numpy as np
 from qLearning import QL
 from qlearning_lambda import qlearning_lambda
 
+
 def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
-    distance_difference = 10
-    state_number = 1
+    distance_difference_min = 10
+    distance_difference_max = 10
+    spacing = 2
     actions = ['left', 'go', 'right']
     learning_rate = 0.4
     greedy = 0.05
@@ -16,14 +18,14 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
     np.random.seed(1337)
 
     episode_count = 120000
-    max_steps = 1500
+    max_steps = 6000
 
     step_queue = []
     # initialize pigpiod and set at which distance is dead
     env = Env()
 
     Qlearning = QL(actions, decay, greedy, learning_rate)
-    #Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
+    # Qlearning = qlearning_lambda(actions, decay, greedy, learning_rate, Lambda)
 
     # load weight
     Qlearning.load("Qtable.h5")
@@ -54,7 +56,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
         print("step_average:" + str(step_average))
     except:
         step_average = 0
-        print ("step_average: Error")
+        print("step_average: Error")
 
     print("Autocar Experiment Start.")
     env.wait()
@@ -81,8 +83,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 Qlearning.parameter_set(0.08, 0.001, 0.7)
 
             receive_data = env.get_respond()
-            state = env.bullshit_process_data(receive_data)
-            #state = env.process_data_by_distance(receive_data, distance_difference, state_number)
+            state = env.process_data_by_distance(receive_data, distance_difference_min, distance_difference_max,
+                                                 spacing)
             step = 0
             total_reward = 0
             for j in range(max_steps):
@@ -92,8 +94,8 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 env.step(action)
                 # you should give a small latency to make sure your action do work without being skipped
                 receive_data = env.get_respond()
-                new_state = env.bullshit_process_data(receive_data)
-                #new_state = env.process_data_by_distance(receive_data, distance_difference, state_number)
+                new_state = env.process_data_by_distance(receive_data, distance_difference_min, distance_difference_max,
+                                                         spacing)
                 reward, dead = env.get_reward()
                 if train_indicator:
                     Qlearning.learn(state, action, reward, new_state)
@@ -103,7 +105,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 # if you are concern about how fast does Rpi run , use line 101
                 # print("Ep", i, "Step", step, "State", state, "Act", action,
                 #       "resp_t:", (int(time.time() * 1000) - time_record))
-                print("Ep: "+str(i)+", Step: "+str(step)+", State: "+str(state)+", Act: "+str(action))
+                print("Ep: " + str(i) + ", Step: " + str(step) + ", State: " + str(state) + ", Act: " + str(action))
 
                 if dead:
                     break
@@ -115,9 +117,9 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
             step_queue.append(step)
             if len(step_queue) > average_step_length:
                 step_queue.pop(0)
-            step_average = sum(step_queue)/average_step_length
+            step_average = sum(step_queue) / average_step_length
 
-            if np.mod(i, 10) == 0:    # save every 10 times
+            if np.mod(i, 10) == 0:  # save every 10 times
                 Qlearning.save("Qtable" + str(i) + ".h5")
 
             if train_indicator:
