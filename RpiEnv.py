@@ -73,7 +73,7 @@ class Env:
         if self.pi.read(self.dead_pin) == pigpio.LOW:
             reward = -1000
             if action == 'go':
-                reward = -10000
+                reward = -7000
             dead = True
         return reward, dead
 
