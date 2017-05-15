@@ -65,7 +65,7 @@ class Env:
         if action == 'left':
             self.set_speed(0, 100)
         elif action == 'go':
-            self.set_speed(80, 80)
+            self.set_speed(97, 100)
         else:
             self.set_speed(97, 0)
 
@@ -84,9 +84,11 @@ class Env:
 
         return d
 
-    def get_reward(self):
+    def get_reward(self, action):
         # 0 means die
         reward = 20
+        if action == 'go':
+            reward = 40
         dead = False
         if self.pi.read(self.dead_pin) == pigpio.LOW:
             reward = -1000

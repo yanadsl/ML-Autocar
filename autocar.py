@@ -96,7 +96,7 @@ def playGame(train_indicator=1):  # 1 means Train, 0 means simply Run
                 receive_data = env.get_respond()
                 new_state = env.process_data_by_distance(receive_data, distance_difference_min, distance_difference_max,
                                                          spacing)
-                reward, dead = env.get_reward()
+                reward, dead = env.get_reward(action)
                 if train_indicator:
                     Qlearning.learn(state, action, reward, new_state)
 
